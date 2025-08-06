@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/logo.jpeg";
+import logo from "../assets/images/logos/logo.jpeg";
 
 const SECTIONS = ["hero", "products", "about", "contact"];
 
