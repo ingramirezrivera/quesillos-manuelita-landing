@@ -1,10 +1,11 @@
-import Header from './components/Header';
+import Header from "./components/Header";
+import Hero from "./features/hero/Hero";
 
 function App() {
   return (
     <>
       <Header />
-      {/* Aquí irán el resto de secciones: Hero, About, Products, Contact */}
+      <Hero />
     </>
   );
 }
