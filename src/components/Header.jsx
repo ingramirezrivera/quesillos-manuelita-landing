@@ -195,8 +195,8 @@ export default function Header() {
         className={`
           md:hidden absolute mt-4 right-1 top-full z-40 text-center
           w-[78%] max-w-xs rounded-xl border shadow-xl
-          bg-white/95 backdrop-blur
-          transition-all duration-200 origin-top-right
+          bg-white/95 backdrop-blur-sm
+          transition-all duration-10 origin-top-right
           ${
             isOpen
               ? "opacity-100 scale-100 pointer-events-auto"
