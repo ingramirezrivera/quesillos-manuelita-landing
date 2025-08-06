@@ -2,6 +2,7 @@ import Header from "./components/Header";
 import Hero from "./features/hero/Hero";
 import Products from "./features/products/Products";
 import About from "./features/about/About";
+import Contact from "./features/contact/Contact";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
       <Hero />
       <Products />
       <About />
+      <Contact />
     </>
   );
 }
