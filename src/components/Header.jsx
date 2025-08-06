@@ -79,7 +79,7 @@ export default function Header() {
     }`;
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-20 relative rounded-b-3xl">
+    <header className="bg-white shadow-md sticky top-0 z-50 relative rounded-b-3xl">
       <div className="relative flex items-center px-4 h-16 md:h-16 max-w-7xl mx-auto">
         {/* Logo */}
         <img
