@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logos/logo.jpeg";
 
+// IDs de las secciones del sitio
 const SECTIONS = ["hero", "products", "about", "contact"];
 
 export default function Header() {
@@ -8,7 +9,7 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
   const firstLinkRef = useRef(null);
 
-  // Click en links: scroll suave + marcar activo + cerrar menú
+  // 🔹 Navegación con scroll suave + cerrar menú móvil
   const handleNavClick = (e, id) => {
     e.preventDefault();
     const el = document.getElementById(id);
@@ -19,7 +20,7 @@ export default function Header() {
     }
   };
 
-  // Scroll-Spy con IntersectionObserver
+  // 🔹 ScrollSpy: detecta qué sección está visible
   useEffect(() => {
     const opts = { root: null, threshold: 0.6 };
     const observer = new IntersectionObserver((entries) => {
@@ -37,11 +38,10 @@ export default function Header() {
     return () => observer.disconnect();
   }, []);
 
-  // Bloquear scroll del body cuando el menú esté abierto
+  // 🔹 Bloquear scroll al abrir menú móvil
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
-      // Al abrir, mover foco al primer link para accesibilidad
       if (firstLinkRef.current) firstLinkRef.current.focus();
     } else {
       document.body.classList.remove("overflow-hidden");
@@ -49,7 +49,7 @@ export default function Header() {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
-  // Cerrar en resize a desktop, con Escape y al cambiar hash
+  // 🔹 Cierra menú en eventos específicos (resize, Escape, cambio de hash)
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) setIsOpen(false);
@@ -68,76 +68,61 @@ export default function Header() {
     };
   }, []);
 
+  // 🔹 Estilo base de los links (sin sombras en focus)
   const linkBase =
-    "inline-block transform-gpu transition duration-200 " +
-    "hover:scale-110 focus:scale-110 hover:drop-shadow-[0_2px_2px_rgba(0,0,0,0.25)] " +
-    "focus:drop-shadow-[0_2px_2px_rgba(0,0,0,0.25)]";
+    "inline-block transform-gpu transition duration-200 hover:scale-110 focus:scale-110";
 
+  // 🔹 Clase condicional según sección activa
   const linkClass = (id) =>
-    `${linkBase} ${
-      active === id ? "text-primary font-semibold" : "text-gray-700"
-    }`;
+    `${linkBase} ${active === id ? "text-primary font-semibold" : "text-gray-700"}`;
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50 relative rounded-b-3xl">
+    <header
+      className={`
+        sticky top-0 z-50 w-full bg-white shadow-md
+        relative rounded-b-3xl transition-all duration-300
+      `}
+    >
       <div className="relative flex items-center px-4 h-16 md:h-16 max-w-7xl mx-auto">
-        {/* Logo */}
+        {/* 🔹 Logo */}
         <img
           src={logo}
           alt="Quesillos Manuelita"
           className="
             flex-shrink-0 rounded-xl drop-shadow-xl mr-3 z-50
             h-[78px] w-auto ml-4
-            md:h-28 md:w-auto md:-mb-4 md:mr-6 mt-14 hover:scale-105 transition-transform duration-200
+            md:h-28 md:w-auto md:-mb-4 md:mr-6 mt-14
+            hover:scale-105 transition-transform duration-200
           "
         />
 
-        {/* NAV DESKTOP */}
+        {/* 🔹 Navegación principal (desktop) */}
         <nav
           className="ml-auto hidden md:block"
           aria-label="Navegación principal"
         >
           <ul className="flex gap-8 font-medium">
-            <li>
-              <a
-                href="#hero"
-                className={linkClass("hero")}
-                onClick={(e) => handleNavClick(e, "hero")}
-              >
-                Inicio
-              </a>
-            </li>
-            <li>
-              <a
-                href="#products"
-                className={linkClass("products")}
-                onClick={(e) => handleNavClick(e, "products")}
-              >
-                Productos
-              </a>
-            </li>
-            <li>
-              <a
-                href="#about"
-                className={linkClass("about")}
-                onClick={(e) => handleNavClick(e, "about")}
-              >
-                Sobre nosotros
-              </a>
-            </li>
-            <li>
-              <a
-                href="#contact"
-                className={linkClass("contact")}
-                onClick={(e) => handleNavClick(e, "contact")}
-              >
-                Contacto
-              </a>
-            </li>
+            {SECTIONS.map((id) => (
+              <li key={id}>
+                <a
+                  href={`#${id}`}
+                  className={linkClass(id)}
+                  onClick={(e) => handleNavClick(e, id)}
+                >
+                  {id === "hero"
+                    ? "Inicio"
+                    : id === "products"
+                      ? "Productos"
+                      : id === "about"
+                        ? "Sobre nosotros"
+                        : "Contacto"}
+                </a>
+              </li>
+            ))}
           </ul>
         </nav>
 
-        {/* BOTÓN HAMBURGUESA (MÓVIL) */}
+        {/* 🔹 Botón hamburguesa (mobile) */}
         <button
           type="button"
           className="ml-auto inline-flex items-center justify-center md:hidden rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -161,26 +146,17 @@ export default function Header() {
               />
             </svg>
           ) : (
-            // Icono hamburguesa
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-7 w-7"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 8h16M4 16h16"
-              />
-            </svg>
+            // Icono hamburguesa con 3 barras
+            <div className="space-y-1">
+              <span className="block w-6 h-0.5 bg-gray-700"></span>
+              <span className="block w-6 h-0.5 bg-gray-700"></span>
+              <span className="block w-6 h-0.5 bg-gray-700"></span>
+            </div>
           )}
         </button>
       </div>
 
-      {/* OVERLAY (MÓVIL) - Cierra al tocar fuera */}
+      {/* 🔹 Overlay para cerrar el menú al hacer clic fuera (solo móvil) */}
       {isOpen && (
         <button
           aria-label="Cerrar menú"
@@ -189,19 +165,15 @@ export default function Header() {
         />
       )}
 
-      {/* MENÚ MÓVIL (panel) */}
+      {/* 🔹 Menú móvil (panel) */}
       <div
         id="mobile-menu"
         className={`
           md:hidden absolute mt-4 right-1 top-full z-40 text-center
           w-[78%] max-w-xs rounded-xl border shadow-xl
           bg-white/95 backdrop-blur-sm
-          transition-all duration-10 origin-top-right
-          ${
-            isOpen
-              ? "opacity-100 scale-100 pointer-events-auto"
-              : "opacity-0 scale-95 pointer-events-none"
-          }
+          transition-all duration-200 origin-top-right
+          ${isOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}
         `}
         role="dialog"
         aria-modal="true"
@@ -211,43 +183,24 @@ export default function Header() {
           Menú de navegación
         </h2>
         <ul className="px-4 py-4 space-y-4 font-medium">
-          <li>
-            <a
-              ref={firstLinkRef}
-              href="#hero"
-              className={linkClass("hero")}
-              onClick={(e) => handleNavClick(e, "hero")}
-            >
-              Inicio
-            </a>
-          </li>
-          <li>
-            <a
-              href="#products"
-              className={linkClass("products")}
-              onClick={(e) => handleNavClick(e, "products")}
-            >
-              Productos
-            </a>
-          </li>
-          <li>
-            <a
-              href="#about"
-              className={linkClass("about")}
-              onClick={(e) => handleNavClick(e, "about")}
-            >
-              Sobre nosotros
-            </a>
-          </li>
-          <li>
-            <a
-              href="#contact"
-              className={linkClass("contact")}
-              onClick={(e) => handleNavClick(e, "contact")}
-            >
-              Contacto
-            </a>
-          </li>
+          {SECTIONS.map((id, i) => (
+            <li key={id}>
+              <a
+                ref={i === 0 ? firstLinkRef : null}
+                href={`#${id}`}
+                className={linkClass(id)}
+                onClick={(e) => handleNavClick(e, id)}
+              >
+                {id === "hero"
+                  ? "Inicio"
+                  : id === "products"
+                    ? "Productos"
+                    : id === "about"
+                      ? "Sobre nosotros"
+                      : "Contacto"}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </header>

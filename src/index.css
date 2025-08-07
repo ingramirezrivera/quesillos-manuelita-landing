@@ -5,3 +5,7 @@
 html {
   scroll-behavior: smooth;
 }
+
+[id]:not(#hero) {
+  scroll-margin-top: 3rem; /* Ajusta según la altura del navbar */
+}

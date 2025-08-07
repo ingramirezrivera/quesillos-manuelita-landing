@@ -6,7 +6,7 @@ export default function About() {
   return (
     <section
       id="about"
-      className="relative py-16 text-white overflow-hidden mt-16 md:mt-24 z-0"
+      className="relative py-32 text-white overflow-hidden mt-16 md:mt-24 z-0"
     >
       {/* Imagen de fondo */}
       <img
