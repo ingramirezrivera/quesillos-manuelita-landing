@@ -21,7 +21,6 @@ export default function Hero() {
     setIndex((i) => (i - 1 + total) % total);
   };
 
-  // Autoplay
   useEffect(() => {
     if (paused) return;
     timerRef.current = setInterval(() => {
@@ -30,14 +29,12 @@ export default function Hero() {
     return () => clearInterval(timerRef.current);
   }, [paused, total]);
 
-  // Pausar si la pestaña no está visible
   useEffect(() => {
     const onVisibility = () => setPaused(document.hidden);
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
   }, []);
 
-  // Teclado: ← y →
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "ArrowRight") next();
@@ -47,7 +44,6 @@ export default function Hero() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Deslizar en móvil
   const startX = useRef(0);
   const onPointerDown = (e) => {
     startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
@@ -60,13 +56,32 @@ export default function Hero() {
     if (dx < -threshold) next();
   };
 
+  useEffect(() => {
+    const preloadSrc = (src) => {
+      if (!src) return;
+      const img = new Image();
+      img.decoding = "async";
+      img.loading = "eager";
+      img.src = src;
+    };
+    const nextIdx = (index + 1) % total;
+    const prevIdx = (index - 1 + total) % total;
+    preloadSrc(slides[nextIdx]?.mobile);
+    preloadSrc(slides[nextIdx]?.desktop);
+    preloadSrc(slides[prevIdx]?.mobile);
+    preloadSrc(slides[prevIdx]?.desktop);
+  }, [index, total]);
+
   return (
     <section
       id="hero"
       role="region"
       aria-roledescription="carousel"
       aria-label="Galería planta Quesillos Manuelita"
-      className="relative -mt-6 h-[70vh] md:h-[85vh] overflow-hidden"
+      className="
+        relative -mt-6 h-[70vh] md:h-[85vh] overflow-hidden
+        rounded-b-3xl
+      "
       onPointerDown={onPointerDown}
       onPointerUp={onPointerUp}
       onTouchStart={onPointerDown}
@@ -76,6 +91,7 @@ export default function Hero() {
       <div className="absolute inset-0">
         {slides.map((s, i) => {
           const isActive = i === index;
+          const isFirst = i === 0;
           return (
             <div
               key={s.id}
@@ -101,18 +117,20 @@ export default function Hero() {
                         ? "scale-[1.08]"
                         : "scale-100"
                   }`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  fetchPriority={i === 0 ? "high" : "auto"}
+                  loading={isFirst ? "eager" : "lazy"}
+                  fetchPriority={isFirst ? "high" : "auto"}
+                  decoding="async"
+                  draggable={false}
                 />
               </picture>
 
-              {/* Gradiente */}
+              {/* Gradiente inferior */}
               <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
 
-              {/* Overlay */}
+              {/* Overlay con sombra */}
               <div className="absolute inset-0 flex items-end">
-                <div className="max-w-7xl mx-auto px-4 w-full pb-8 md:pb-12">
-                  <div className="max-w-xl text-white">
+                <div className="max-w-7xl mx-auto px-4 w-full pb-14 sm:pb-16 md:pb-24 lg:pb-28">
+                  <div className="max-w-xl text-white shadow-md shadow-black/40 rounded-lg p-4 bg-black/20">
                     <h1 className="text-2xl md:text-5xl font-bold drop-shadow">
                       {s.title}
                     </h1>
@@ -141,32 +159,19 @@ export default function Hero() {
         })}
       </div>
 
-      {/* Flechas */}
-      <button
-        aria-label="Slide anterior"
-        onClick={prev}
-        className="absolute left-3 top-1/2 -translate-y-1/2 rounded-full bg-black/35 hover:bg-black/50 p-2 text-white"
-      >
-        ‹
-      </button>
-      <button
-        aria-label="Slide siguiente"
-        onClick={next}
-        className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full bg-black/35 hover:bg-black/50 p-2 text-white"
-      >
-        ›
-      </button>
-
-      {/* Bullets */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+      {/* Bullets amarillos con sombra */}
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-20">
         {slides.map((_, i) => (
           <button
             key={i}
             aria-label={`Ir al slide ${i + 1}`}
             onClick={() => goTo(i)}
-            className={`h-2.5 w-2.5 rounded-full transition ${
-              i === index ? "bg-white" : "bg-white/50 hover:bg-white/80"
-            }`}
+            className={`
+              h-3.5 w-3.5 rounded-full shadow-md shadow-black/40 transition
+              ${
+                i === index ? "bg-primary" : "bg-primary/50 hover:bg-primary/80"
+              }
+            `}
           />
         ))}
       </div>

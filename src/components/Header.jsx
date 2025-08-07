@@ -68,20 +68,20 @@ export default function Header() {
     };
   }, []);
 
-  // 🔹 Estilo base de los links (sin sombras en focus)
+  // 🔹 Estilo base de los links
   const linkBase =
     "inline-block transform-gpu transition duration-200 hover:scale-110 focus:scale-110";
 
-  // 🔹 Clase condicional según sección activa
   const linkClass = (id) =>
     `${linkBase} ${active === id ? "text-primary font-semibold" : "text-gray-700"}`;
 
   return (
     <header
-      className={`
-        sticky top-0 z-50 w-full bg-white shadow-md
-        relative rounded-b-3xl transition-all duration-300
-      `}
+      className="
+        sticky top-0 z-50 w-full bg-white
+        rounded-b-3xl
+        transition-all duration-300
+      "
     >
       <div className="relative flex items-center px-4 h-16 md:h-16 max-w-7xl mx-auto">
         {/* 🔹 Logo */}
@@ -132,7 +132,6 @@ export default function Header() {
           onClick={() => setIsOpen((v) => !v)}
         >
           {isOpen ? (
-            // Icono cerrar (X)
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-6 w-6"
@@ -146,7 +145,6 @@ export default function Header() {
               />
             </svg>
           ) : (
-            // Icono hamburguesa con 3 barras
             <div className="space-y-1">
               <span className="block w-6 h-0.5 bg-gray-700"></span>
               <span className="block w-6 h-0.5 bg-gray-700"></span>
@@ -156,7 +154,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 🔹 Overlay para cerrar el menú al hacer clic fuera (solo móvil) */}
+      {/* 🔹 Overlay (mobile) */}
       {isOpen && (
         <button
           aria-label="Cerrar menú"
@@ -165,7 +163,7 @@ export default function Header() {
         />
       )}
 
-      {/* 🔹 Menú móvil (panel) */}
+      {/* 🔹 Menú móvil */}
       <div
         id="mobile-menu"
         className={`
