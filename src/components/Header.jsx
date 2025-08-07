@@ -78,8 +78,8 @@ export default function Header() {
   return (
     <header
       className="
-        sticky top-0 z-50 w-full bg-white
-        rounded-b-3xl
+        sticky top-0 z-40 w-full bg-white
+        rounded-b-3xl shadow-xl
         transition-all duration-300
       "
     >
