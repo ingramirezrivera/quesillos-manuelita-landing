@@ -45,7 +45,7 @@ export default function Products() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition transform hover:scale-[1.02]"
+              className="rounded-xl overflow-hidden shadow-xl hover:shadow-2xl transition transform hover:scale-[1.02]"
             >
               <button
                 type="button"
@@ -97,11 +97,17 @@ export default function Products() {
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
             <div className="w-full max-w-5xl rounded-2xl bg-white shadow-xl relative overflow-visible">
-              {/* Logo sobresaliente (solo desktop) */}
+              {/* Logo sobresaliente (desktop) */}
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
                 className="hidden md:block absolute -left-10 -top-12 h-28 w-auto rounded-xl shadow-lg z-10"
+              />
+              {/* Logo en mobile (visible) */}
+              <img
+                src={logo}
+                alt="Quesillos Manuelita"
+                className="md:hidden absolute left-3 -top-12 h-24 w-auto rounded-lg shadow z-10"
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2">
@@ -164,14 +170,18 @@ function ModalImages({ selected }) {
       />
 
       {canToggle && (
-        <div className="absolute bottom-3 left-0 right-0 flex justify-center">
-          <button
-            onClick={() => setShowAlt((v) => !v)}
-            className="rounded-full bg-white/90 px-3 py-1 text-sm shadow hover:bg-white"
-            aria-label="Cambiar imagen del producto"
-          >
-            {showAlt ? "Ver imagen principal" : "Ver otra foto"}
-          </button>
+        <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-2">
+          {[false, true].map((isAlt, idx) => (
+            <button
+              key={idx}
+              onClick={() => setShowAlt(isAlt)}
+              aria-label={
+                isAlt ? "Ver imagen alternativa" : "Ver imagen principal"
+              }
+              className={`h-3.5 w-3.5 rounded-full shadow-md shadow-black/40 transition
+                ${showAlt === isAlt ? "bg-primary" : "bg-primary/50 hover:bg-primary/80"}`}
+            />
+          ))}
         </div>
       )}
     </div>
