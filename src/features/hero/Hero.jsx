@@ -25,7 +25,7 @@ export default function Hero() {
     if (paused) return;
     timerRef.current = setInterval(() => {
       setIndex((i) => (i + 1) % total);
-    }, 4500);
+    }, 10000);
     return () => clearInterval(timerRef.current);
   }, [paused, total]);
 
@@ -79,7 +79,7 @@ export default function Hero() {
       aria-roledescription="carousel"
       aria-label="Galería planta Quesillos Manuelita"
       className="
-        relative -mt-6 h-[70vh] md:h-[85vh] overflow-hidden
+        relative -mt-6 h-[70vh] md:h-[95vh] overflow-hidden
         rounded-b-3xl
       "
       onPointerDown={onPointerDown}
@@ -114,7 +114,7 @@ export default function Hero() {
                     isActive
                       ? "animate-zoomSlow"
                       : i === lastIndex.current
-                        ? "scale-[1.08]"
+                        ? "scale-[1.05]"
                         : "scale-100"
                   }`}
                   loading={isFirst ? "eager" : "lazy"}

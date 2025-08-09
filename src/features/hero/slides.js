@@ -1,33 +1,33 @@
 // src/features/hero/slides.js
-import d1 from "../../assets/images/hero/desktop/planta-01.jpg";
-import d2 from "../../assets/images/hero/desktop/planta-02.jpg";
-import d3 from "../../assets/images/hero/desktop/planta-03.jpg";
+import d1 from "../../assets/images/hero/desktop/hero-01.jpg";
+import d2 from "../../assets/images/hero/desktop/hero-02.jpg";
+import d3 from "../../assets/images/hero/desktop/hero-03.jpg";
 
-import m1 from "../../assets/images/hero/mobile/planta-01.jpg";
-import m2 from "../../assets/images/hero/mobile/planta-02.jpg";
-import m3 from "../../assets/images/hero/mobile/planta-03.jpg";
+import m1 from "../../assets/images/hero/mobile/hero-mobile-01.jpg";
+import m2 from "../../assets/images/hero/mobile/hero-mobile-02.jpg";
+import m3 from "../../assets/images/hero/mobile/hero-mobile-03.jpg";
 
 export const slides = [
   {
-    id: "planta-01",
-    title: "Quesillos hechos con tradición",
-    text: "Proceso artesanal con estándares de calidad.",
+    id: "hero-01",
+    title: "Un queso tipo Mozzarella con el sabor de una región",
+    text: "Del campo a tu mesa, con la tradición y el sabor de Antioquia.",
     desktop: d1,
     mobile: m1,
-    alt: "Operario trabajando el cuajado en la planta",
+    alt: "Amanecer en una finca lechera de Antioquia",
   },
   {
-    id: "planta-02",
-    title: "Materia prima seleccionada",
-    text: "Leche fresca y control de temperatura en cada etapa.",
+    id: "hero-02",
+    title: "Hamburguesas con un toque de hogar",
+    text: "Eleva la experiencia de una hamburguesa con quesillos manueltia.",
     desktop: d2,
     mobile: m2,
     alt: "Ingreso de leche a los tanques de producción",
   },
   {
-    id: "planta-03",
-    title: "Listos para tu mesa",
-    text: "Empaque higiénico y distribución eficiente.",
+    id: "hero-03",
+    title: "El ingrediente que lo cambia todo",
+    text: "Con quesillos Manuelita darás el toque de sabor que tu negocio necesita.",
     desktop: d3,
     mobile: m3,
     alt: "Línea de empaque de quesillos",
