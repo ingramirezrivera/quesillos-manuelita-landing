@@ -4,7 +4,9 @@ export default function Contact() {
   return (
     <section id="contact" className="py-16 bg-gray-50">
       <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl text-center font-bold mb-4">Contáctanos</h2>
+        <h2 className="text-4xl md:text-5xl text-center font-bold mb-4">
+          Contáctanos
+        </h2>
 
         <p className="text-gray-700 text-center mx-auto mb-10 max-w-2xl">
           Escríbenos para resolver tus dudas o peticiones. Llena todos los

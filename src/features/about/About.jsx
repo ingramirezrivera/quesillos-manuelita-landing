@@ -1,16 +1,8 @@
 // src/features/about/About.jsx
 
-// ✅ Este componente muestra la sección "Sobre Nosotros" como una presentación tipo carrusel:
-// - Una sola diapositiva visible a la vez (imagen/video + texto)
-// - Autoplay cada 5s (pausa cuando la pestaña no está visible)
-// - Navegación con flechas de teclado (← →) cuando el contenedor tiene foco
-// - Bullets para saltar a una sección específica
-// - Bordes redondeados responsivos: en mobile redondea arriba, en desktop solo izquierda/derecha según columna
-// - Alturas sincronizadas entre imagen y texto (puedes ajustarlas donde indican los comentarios)
-
 import { useEffect, useRef, useState } from "react";
 import { ABOUT_SECTIONS } from "./aboutData"; // 📦 Fuente de datos (id, title, body, media)
-import fondo from "../../assets/images/about/fondo-about.jpg"; // 🌄 Fondo de la sección
+import fondo from "../../assets/images/about/fondo-about.jpg";
 
 export default function About() {
   // 🔢 Índice actual de la diapositiva visible
@@ -36,7 +28,7 @@ export default function About() {
     if (timerRef.current) clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       if (!pausedRef.current) next();
-    }, 5000); // ⏲️ Ajusta la velocidad del autoplay aquí (ms)
+    }, 20000); // ⏲️ Ajusta la velocidad del autoplay aquí (ms)
     return () => clearInterval(timerRef.current);
   }, [total]);
 
@@ -85,7 +77,9 @@ export default function About() {
 
       {/* 📦 Contenido principal (puedes cambiar a max-w-7xl si quieres limitar ancho) */}
       <div className="relative z-20 w-full px-0">
-        <h2 className="text-3xl font-bold text-center mb-10">Sobre Nosotros</h2>
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-10">
+          Sobre Nosotros
+        </h2>
 
         {/* 🎞️ Contenedor de la presentación (una sola diapositiva visible) 
             Accesible: role/aria + tabIndex para permitir foco y teclado */}
@@ -97,10 +91,10 @@ export default function About() {
           tabIndex={0}
           // 🎨 Fondo translúcido, blur y sombra. Si quieres bordes responsivos como el modal:
           // añade `rounded-none md:rounded-2xl` aquí (o el radio que prefieras).
-          className="relative bg-white/10 backdrop-blur-sm shadow p-8 md:p-6"
+          className="relative bg-white/10 backdrop-blur-sm shadow py-6 px-0 md:p-6"
         >
           {/* 🧩 Slide actual en 2 columnas (mobile apila, desktop dos columnas) */}
-          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 items-stretch px-3 md:px-6">
             {/* 🖼️ Media (imagen o video)
                 📏 ALTURA: ajusta aquí para controlar el alto del cuadro de media.
                 - Móvil: h-64
@@ -130,11 +124,13 @@ export default function About() {
                 🟡 Bordes responsivos:
                 - Mobile: `rounded-b-2xl` (solo abajo)
                 - Desktop: `md:rounded-tr-2xl md:rounded-r-2xl` (solo derecha) */}
-            <div className=" bg-white/10  backdrop-blur-sm shadow p-5 md:p-6 h-64 md:h-[420px] overflow-auto flex flex-col justify-center rounded-b-2xl md:rounded-none md:rounded-tr-2xl md:rounded-r-2xl">
+            <div className=" bg-white/10  backdrop-blur-sm shadow p-5 md:p-6 h-90 md:h-[420px] overflow-auto flex flex-col justify rounded-b-2xl md:rounded-none md:rounded-tr-2xl md:rounded-r-2xl">
               {/* 🏷️ Subtítulo centrado */}
-              <h3 className="text-2xl font-bold text-center">{s.title}</h3>
+              <h3 className="text-3xl md:text-4xl font-bold text-center pb-4">
+                {s.title}
+              </h3>
               {/* ✍️ Descripción justificada (ajusta a tu gusto: text-left, text-center, etc.) */}
-              <p className="mt-3 text-white/90 leading-relaxed text-justify">
+              <p className="md:text-xl mt-3 text-white/90 leading-relaxed text-justify md:px-8">
                 {s.body}
               </p>
             </div>
@@ -158,10 +154,18 @@ export default function About() {
 
         {/* 🏆 KPIs / Logros (puedes editar valores y textos) 
             - Si quieres centrarlos más en pantallas grandes, ajusta `mx-12 md:mx-24` */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mx-12 md:mx-24">
-          <KPI number="15+" label="Años de experiencia" />
-          <KPI number="500k+" label="Litros procesados al año" />
-          <KPI number="300+" label="Familias beneficiadas" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 mx-12 md:mx-64">
+          <KPI className="text-3xl" number="15+" label="Años de experiencia" />
+          <KPI
+            className="text-3xl"
+            number="500k+"
+            label="Litros procesados al año"
+          />
+          <KPI
+            className="text-3xl"
+            number="300+"
+            label="Familias beneficiadas"
+          />
         </div>
       </div>
     </section>
