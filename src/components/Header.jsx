@@ -90,7 +90,7 @@ export default function Header() {
           alt="Quesillos Manuelita"
           className="
             flex-shrink-0 rounded-xl drop-shadow-xl mr-3 z-50
-            h-[78px] w-auto ml-4
+            h-[84px] w-auto ml-4
             md:h-28 md:w-auto md:-mb-4 md:mr-6 mt-14
             hover:scale-105 transition-transform duration-200
           "
@@ -101,7 +101,7 @@ export default function Header() {
           className="ml-auto hidden md:block"
           aria-label="Navegación principal"
         >
-          <ul className="flex gap-8 font-medium">
+          <ul className="flex gap-8 font-medium text-lg">
             {SECTIONS.map((id) => (
               <li key={id}>
                 <a
