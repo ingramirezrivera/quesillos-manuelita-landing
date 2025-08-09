@@ -41,7 +41,7 @@ export default function Products() {
         </p>
 
         {/* Grilla de productos */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {products.map((product) => (
             <div
               key={product.id}
@@ -65,12 +65,14 @@ export default function Products() {
                 <p className="text-sm text-gray-600 mt-1 text-center">
                   {product.description}
                 </p>
-                <a
-                  href="#contact"
+                <button
+                  type="button"
+                  onClick={() => handleOpen(product)}
                   className="mt-4 inline-block bg-primary text-black px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors"
+                  aria-label={`Ver más detalles de ${product.name}`}
                 >
-                  Pedir ahora
-                </a>
+                  Ver más
+                </button>
               </div>
             </div>
           ))}
@@ -140,7 +142,11 @@ export default function Products() {
 
                   <div className="mt-auto pt-6">
                     <a
-                      href="#contact"
+                      href={`https://wa.me/5743042091223?text=${encodeURIComponent(
+                        `Hola, me interesa el ${selected.name}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener"
                       className="inline-flex items-center rounded-lg px-4 py-2 bg-primary text-black font-medium hover:bg-yellow-500"
                     >
                       Pedir ahora

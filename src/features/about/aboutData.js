@@ -2,7 +2,7 @@ import fondo from "../../assets/images/about/fondo-about.jpg";
 import planta from "../../assets/images/about/planta.jpg";
 import equipo from "../../assets/images/about/equipo.jpg";
 import calidad from "../../assets/images/about/calidad.jpg";
-import somos from "../../assets/images/about/somos.jpg";
+import somos from "../../assets/images/about/somos.jpeg";
 import quesos from "../../assets/images/about/quesos.jpg";
 import produccion from "../../assets/images/about/produccion.jpg";
 

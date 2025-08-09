@@ -1,5 +1,6 @@
 import React from "react";
 import logo from "../../assets/images/logos/logo.jpeg";
+import logoCatar from "../../assets/images/logos/districatar-logo.png";
 
 export default function Footer() {
   return (
@@ -46,6 +47,11 @@ export default function Footer() {
 
         {/* Redes sociales */}
         <div>
+          <img
+            src={logoCatar}
+            alt="Logo"
+            className="w-40 h-30 mb-0 object-contain"
+          />
           <h3 className="text-lg font-semibold mb-4">Síguenos</h3>
           <div className="flex gap-4">
             <a

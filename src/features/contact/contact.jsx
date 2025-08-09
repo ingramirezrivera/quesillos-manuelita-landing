@@ -1,4 +1,4 @@
-import logo from "../../assets/images/logos/logo.jpeg";
+import logo from "../../assets/images/contact/districatar-logo.png";
 
 export default function Contact() {
   return (
@@ -56,16 +56,19 @@ export default function Contact() {
           {/* Información de contacto */}
 
           <div className="flex flex-col justify-center items-center gap-6 text-gray-800 bg-white rounded-xl shadow-md p-6 h-full">
-            <div className="flex justify-center items-center gap-4">
+            <div className="flex flex-col justify-center items-center gap-4">
               <img
                 src={logo}
                 alt="Logo"
-                className="w-20 h-20 mb-8 object-contain"
+                className="w-40 h-30 mb-0 object-contain"
               />
+              <p className="text-gray-600 ">
+                Distribuidor oficial de Quesillos manuelita
+              </p>
             </div>
             <div className="text-center">
               <h3 className="font-semibold text-lg">Teléfono</h3>
-              <p className="text-gray-600 mt-1">+57 312 345 6789</p>
+              <p className="text-gray-600 mt-1">+57 3042091223</p>
             </div>
             <div className="text-center">
               <h3 className="font-semibold text-lg">Correo</h3>
