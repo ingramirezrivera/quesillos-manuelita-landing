@@ -63,7 +63,7 @@ export default function Contact() {
                 className="w-40 h-30 mb-0 object-contain"
               />
               <p className="text-gray-600 ">
-                Distribuidor oficial de Quesillos manuelita
+                Distribuidor oficial de Quesillos Manuelita
               </p>
             </div>
             <div className="text-center">

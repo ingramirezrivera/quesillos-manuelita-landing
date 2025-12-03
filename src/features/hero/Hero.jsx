@@ -12,10 +12,12 @@ export default function Hero() {
     lastIndex.current = index;
     setIndex((i + total) % total);
   };
+
   const next = () => {
     lastIndex.current = index;
     setIndex((i) => (i + 1) % total);
   };
+
   const prev = () => {
     lastIndex.current = index;
     setIndex((i) => (i - 1 + total) % total);
@@ -26,6 +28,7 @@ export default function Hero() {
     timerRef.current = setInterval(() => {
       setIndex((i) => (i + 1) % total);
     }, 10000);
+
     return () => clearInterval(timerRef.current);
   }, [paused, total]);
 
@@ -56,21 +59,8 @@ export default function Hero() {
     if (dx < -threshold) next();
   };
 
-  useEffect(() => {
-    const preloadSrc = (src) => {
-      if (!src) return;
-      const img = new Image();
-      img.decoding = "async";
-      img.loading = "eager";
-      img.src = src;
-    };
-    const nextIdx = (index + 1) % total;
-    const prevIdx = (index - 1 + total) % total;
-    preloadSrc(slides[nextIdx]?.mobile);
-    preloadSrc(slides[nextIdx]?.desktop);
-    preloadSrc(slides[prevIdx]?.mobile);
-    preloadSrc(slides[prevIdx]?.desktop);
-  }, [index, total]);
+  // Tomamos el primer slide como el que define el video de fondo
+  const videoSlide = slides[0];
 
   return (
     <section
@@ -87,76 +77,68 @@ export default function Hero() {
       onTouchStart={onPointerDown}
       onTouchEnd={onPointerUp}
     >
-      {/* Slides */}
+      {/* Fondo de video fijo */}
       <div className="absolute inset-0">
-        {slides.map((s, i) => {
-          const isActive = i === index;
-          const isFirst = i === 0;
-          return (
-            <div
-              key={s.id}
-              aria-hidden={!isActive}
-              aria-label={`Slide ${i + 1} de ${total}`}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                isActive ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <picture>
-                <source
-                  media="(min-width:768px)"
-                  srcSet={s.desktop}
-                  type="image/webp"
-                />
-                <img
-                  src={s.mobile}
-                  alt={s.alt}
-                  className={`h-full w-full object-cover transform-gpu will-change-transform ${
-                    isActive
-                      ? "animate-zoomSlow"
-                      : i === lastIndex.current
-                        ? "scale-[1.05]"
-                        : "scale-100"
-                  }`}
-                  loading={isFirst ? "eager" : "lazy"}
-                  fetchPriority={isFirst ? "high" : "auto"}
-                  decoding="async"
-                  draggable={false}
-                />
-              </picture>
+        {videoSlide?.type === "video" && videoSlide.videoSrc && (
+          <video
+            className="h-full w-full object-cover"
+            src={videoSlide.videoSrc}
+            // poster={videoSlide.poster} // si luego lo usas
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+          />
+        )}
 
-              {/* Gradiente inferior */}
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
+        {/* Capa de las tarjetas (texto) que cambian */}
+        <div className="absolute inset-0">
+          {slides.map((s, i) => {
+            const isActive = i === index;
+            return (
+              <div
+                key={s.id}
+                aria-hidden={!isActive}
+                aria-label={`Slide ${i + 1} de ${total}`}
+                className={`absolute inset-0 transition-opacity duration-700 ${
+                  isActive ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                {/* Gradiente inferior para legibilidad */}
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/60 to-transparent" />
 
-              {/* Overlay con sombra */}
-              <div className="absolute inset-0 flex items-end">
-                <div className="max-w-7xl mx-auto px-4 w-full pb-14 sm:pb-16 md:pb-24 lg:pb-28">
-                  <div className="max-w-xl text-white shadow-md shadow-black/40 rounded-lg p-4 bg-black/20">
-                    <h1 className="text-2xl md:text-5xl font-bold drop-shadow">
-                      {s.title}
-                    </h1>
-                    <p className="mt-2 md:mt-3 text-sm md:text-lg opacity-95">
-                      {s.text}
-                    </p>
-                    <div className="mt-4 flex gap-3">
-                      <a
-                        href="#about"
-                        className="inline-flex items-center rounded-lg px-4 py-2 bg-primary text-black font-medium hover:bg-yellow-500"
-                      >
-                        Conócenos
-                      </a>
-                      <a
-                        href="#products"
-                        className="inline-flex items-center rounded-lg px-4 py-2 bg-white/90 text-gray-900 font-medium hover:bg-white"
-                      >
-                        Nuestros productos
-                      </a>
+                {/* Overlay con sombra y texto */}
+                <div className="absolute inset-0 flex items-end">
+                  <div className="max-w-7xl mx-auto px-4 w-full pb-14 sm:pb-16 md:pb-24 lg:pb-28">
+                    <div className="max-w-xl text-white shadow-md shadow-black/40 rounded-lg p-4 bg-black/20 backdrop-blur-sm">
+                      <h1 className="text-2xl md:text-5xl font-bold drop-shadow">
+                        {s.title}
+                      </h1>
+                      <p className="mt-2 md:mt-3 text-sm md:text-lg opacity-95">
+                        {s.text}
+                      </p>
+                      <div className="mt-4 flex gap-3">
+                        <a
+                          href="#about"
+                          className="inline-flex items-center rounded-lg px-4 py-2 bg-primary text-black font-medium hover:bg-yellow-500"
+                        >
+                          Conócenos
+                        </a>
+                        <a
+                          href="#products"
+                          className="inline-flex items-center rounded-lg px-4 py-2 bg-white/90 text-gray-900 font-medium hover:bg-white"
+                        >
+                          Nuestros productos
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
       {/* Bullets amarillos con sombra */}
