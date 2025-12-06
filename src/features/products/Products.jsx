@@ -46,34 +46,36 @@ export default function Products() {
           {products.map((product) => (
             <div
               key={product.id}
-              className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              className="flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
             >
               <button
                 type="button"
                 onClick={() => handleOpen(product)}
-                className="block w-full h-64 overflow-hidden group relative"
+                className="block w-auto h-100 overflow-hidden group relative"
                 aria-label={`Ver detalles de ${product.name}`}
               >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover transition-transform duration-500"
                 />
                 {/* Overlay sutil al pasar el mouse */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </button>
 
-              <div className="p-5 flex flex-col items-center">
-                <h3 className="text-xl font-bold text-gray-800">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2">
-                  {product.description}
-                </p>
+              <div className="p-5 flex flex-col items-center flex-grow">
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-gray-800 h-14">
+                    {product.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2">
+                    {product.description}
+                  </p>
+                </div>
                 <button
                   type="button"
                   onClick={() => handleOpen(product)}
-                  className="mt-5 inline-block bg-primary text-black font-medium px-6 py-2 rounded-full hover:bg-yellow-500 transition-colors shadow-sm"
+                  className="mt-auto inline-block bg-primary text-black font-medium px-6 py-2 rounded-full hover:bg-yellow-500 transition-colors shadow-sm"
                 >
                   Ver detalles
                 </button>
