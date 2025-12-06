@@ -51,8 +51,8 @@ function SlideItem({ slide, isActive }) {
 
       {/* Overlay con sombra y texto */}
       <div className="absolute inset-0 flex items-end">
-        <div className="max-w-7xl mx-auto px-4 w-full pb-14 sm:pb-16 md:pb-24 lg:pb-28">
-          <div className="max-w-xl text-white shadow-md shadow-black/40 rounded-lg p-4 bg-black/20 backdrop-blur-sm">
+        <div className="max-w-7xl mx-auto px-4 w-full pb-8 sm:pb-10 md:pb-12 lg:pb-10">
+          <div className="max-w-xl text-white shadow-md shadow-black/40 rounded-lg p-4 bg-black/15 backdrop-blur-10">
             <h1 className="text-2xl md:text-5xl font-bold drop-shadow">
               {slide.title}
             </h1>
