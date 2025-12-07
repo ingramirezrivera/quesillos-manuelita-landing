@@ -6,12 +6,16 @@ import cheddar from "../../assets/images/products/queso-cheddar.jpg";
 import cheddarAlt from "../../assets/images/products/queso-cheddar-alt.jpg";
 import especial from "../../assets/images/products/queso-especial.jpg";
 import especialAlt from "../../assets/images/products/queso-especial-alt.jpeg";
+// 1. Importa tu video aquí
+import videoBanoMaria from "../../assets/videos/video-bano-maria.mp4";
 
 export const products = [
   {
     id: "mozarella",
     name: "Queso Especial Baño Maria",
     description: "Textura suave y sabor auténtico, perfecto para baño María.",
+    // 2. Añade la propiedad 'videoSrc' con el video importado
+    videoSrc: videoBanoMaria,
     image: mozarella,
     imageAlt: mozarellaAlt, // ← nueva foto alternativa
     specs: [

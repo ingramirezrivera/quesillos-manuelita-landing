@@ -17,14 +17,21 @@ export default function Hero() {
     >
       {/* Fondo de video */}
       <div className="absolute inset-0">
+        {/* 1. Imagen de póster que se muestra siempre al inicio */}
+        <img
+          src={videoSlide.poster}
+          alt={videoSlide.alt}
+          className="h-full w-full object-cover"
+        />
+        {/* 2. El video está encima pero es invisible hasta que carga */}
         <video
           key={videoSlide.videoSrc}
-          className={`h-full w-full object-cover transition-opacity duration-1000 ${
+          className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
             isVideoLoaded ? "opacity-100" : "opacity-0"
           }`}
           src={videoSlide.videoSrc}
-          poster={videoSlide.poster}
           autoPlay
+          // 3. Cuando puede empezar, se hace visible
           onCanPlay={() => setIsVideoLoaded(true)}
           muted
           loop

@@ -217,41 +217,106 @@ export default function Products() {
 
 // --- SUBCOMPONENTE DE IMÁGENES (OPTIMIZADO PARA TU SITUACIÓN) ---
 function ModalImages({ selected }) {
-  const [showAlt, setShowAlt] = useState(false);
-  // Solo permitimos alternar si existe imageAlt
-  const canToggle = Boolean(selected.imageAlt);
+  // Estado para la galería de imágenes (si no hay video)
+  const [showAltImage, setShowAltImage] = useState(false);
+  // Estado para controlar la reproducción del video
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+
+  const hasVideo = Boolean(selected.videoSrc);
+  const canToggleImages = Boolean(selected.imageAlt);
+
+  // Reinicia el estado cuando el producto seleccionado cambia
+  useEffect(() => {
+    setIsPlayingVideo(false);
+    setShowAltImage(false);
+  }, [selected.id]);
+
+  const handlePlayVideo = (e) => {
+    e.stopPropagation();
+    if (hasVideo) {
+      setIsPlayingVideo(true);
+    }
+  };
+
+  const handleVideoEnd = () => {
+    setIsPlayingVideo(false);
+  };
 
   return (
     <div className="relative h-80 md:h-full bg-white md:rounded-l-2xl overflow-hidden group">
-      {/* IMAGEN PRINCIPAL: 'object-cover' es la clave para que se vea asombrosa */}
-      <img
-        src={showAlt && canToggle ? selected.imageAlt : selected.image}
-        alt={selected.name}
-        className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
-      />
-
-      {/* Botones de alternancia (Solo aparecen si hay 2 fotos) */}
-      {canToggle && (
-        <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-4 z-20">
-          {[false, true].map((isAlt, idx) => (
+      {/* Lógica con Video */}
+      {hasVideo && (
+        <>
+          <img
+            src={selected.image}
+            alt={selected.name}
+            className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300 ${
+              isPlayingVideo ? "opacity-0" : "opacity-100"
+            }`}
+          />
+          {!isPlayingVideo && (
             <button
-              key={idx}
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowAlt(isAlt);
-              }}
-              aria-label={
-                isAlt ? "Ver imagen alternativa" : "Ver imagen principal"
-              }
-              className={`h-4 w-4 rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-125 
-                ${showAlt === isAlt ? "bg-primary scale-110" : "bg-white/60 hover:bg-white"}`}
-            />
-          ))}
-        </div>
+              onClick={handlePlayVideo}
+              className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity"
+              aria-label="Reproducir video"
+            >
+              <div className="bg-white/80 rounded-full p-4 shadow-lg">
+                <svg
+                  className="w-12 h-12 text-black"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+            </button>
+          )}
+          <video
+            src={selected.videoSrc}
+            onEnded={handleVideoEnd}
+            autoPlay
+            controls
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+              isPlayingVideo ? "opacity-100" : "opacity-0 pointer-events-none"
+            }`}
+          />
+        </>
       )}
 
-      {/* Sombra suave abajo para que los botones resalten */}
-      {canToggle && (
+      {/* Lógica sin Video (Galería de imágenes) */}
+      {!hasVideo && (
+        <>
+          <img
+            src={
+              showAltImage && canToggleImages
+                ? selected.imageAlt
+                : selected.image
+            }
+            alt={selected.name}
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+          />
+          {canToggleImages && (
+            <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-4 z-20">
+              {[false, true].map((isAlt, idx) => (
+                <button
+                  key={idx}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowAltImage(isAlt);
+                  }}
+                  aria-label={
+                    isAlt ? "Ver imagen alternativa" : "Ver imagen principal"
+                  }
+                  className={`h-4 w-4 rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-125 ${showAltImage === isAlt ? "bg-primary scale-110" : "bg-white/60 hover:bg-white"}`}
+                />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Sombra suave abajo para que los botones de la galería resalten */}
+      {!hasVideo && canToggleImages && (
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
       )}
     </div>
