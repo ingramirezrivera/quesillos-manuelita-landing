@@ -102,36 +102,40 @@ export default function Products() {
             aria-label={`Detalles de ${selected.name}`}
             ref={dialogRef}
             tabIndex={-1}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            // Permitimos overflow para el logo y para el scroll interno
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto"
           >
-            <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl relative overflow-visible animate-fadeIn">
+            {/* Contenedor de la tarjeta del modal con margen superior para el logo */}
+            <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl relative animate-fadeIn mt-12">
               {/* Logo Flotante (Desktop) */}
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
-                className="hidden md:block absolute -left-6 -top-10 h-24 w-auto rounded-xl shadow-lg z-50 border-2 border-white"
+                className="hidden md:block absolute -left-6 -top-12 h-24 w-auto rounded-xl shadow-lg z-50 border-2 border-white"
               />
               {/* Logo Flotante (Móvil) */}
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
-                className="md:hidden absolute left-4 -top-10 h-20 w-auto rounded-lg shadow-lg z-50 border-2 border-white"
+                className="md:hidden absolute left-4 -top-12 h-20 w-auto rounded-lg shadow-lg z-50 border-2 border-white"
               />
 
               {/* Botón Cerrar Flotante (Móvil) */}
               <button
                 onClick={handleClose}
-                className="md:hidden absolute right-2 top-2 z-50 bg-white/80 rounded-full p-2 text-gray-600 hover:text-red-500"
+                // Ajustado para estar dentro del modal y no sobre el logo
+                className="md:hidden absolute right-3 -top-9 z-50 bg-white/80 rounded-full p-1 text-gray-600 hover:text-red-500"
               >
                 ✕
               </button>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 min-h-[500px]">
+              {/* Contenedor con altura máxima y scroll */}
+              <div className="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto rounded-2xl">
                 {/* COLUMNA 1: Imagen (Componente Optimizado) */}
                 <ModalImages selected={selected} />
 
                 {/* COLUMNA 2: Información */}
-                <div className="p-8 md:p-10 flex flex-col justify-center text-left">
+                <div className="p-8 md:p-10 flex flex-col text-left">
                   <div className="hidden md:flex items-start justify-between mb-4">
                     <h3 className="text-3xl font-bold text-gray-900">
                       {selected.name}
