@@ -1,12 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { products } from "./productsData";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logos/logo.jpeg"; // Asegúrate de que esta ruta sea correcta
+import logo from "../../assets/images/logos/logo.jpeg";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
   const dialogRef = useRef(null);
+
+  // 1. Referencia para el Slider de Productos
+  const productsRef = useRef(null);
 
   const handleOpen = (product) => {
     setSelected(product);
@@ -18,13 +21,22 @@ export default function Products() {
     setSelected(null);
   };
 
-  // Manejo de la tecla ESC y bloqueo del scroll trasero
+  // 2. Función para mover el slider con botones
+  const scroll = (direction) => {
+    if (productsRef.current) {
+      const { current } = productsRef;
+      // Desplaza aprox el ancho de una tarjeta + gap
+      const scrollAmount = direction === "left" ? -300 : 300;
+      current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+    }
+  };
+
+  // Manejo de ESC y bloqueo scroll (Modal)
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && handleClose();
     if (open) {
       document.addEventListener("keydown", onKey);
       document.body.classList.add("overflow-hidden");
-      // Foco al modal para accesibilidad
       setTimeout(() => dialogRef.current?.focus(), 0);
     }
     return () => {
@@ -34,20 +46,32 @@ export default function Products() {
   }, [open]);
 
   return (
-    <section id="products" className="py-16 bg-white">
-      <div className="max-w-7xl mx-auto px-4 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-4">Nuestros Quesos</h2>
-        <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
+    <section id="products" className="py-16 bg-white relative">
+      {/* Estilos para ocultar scrollbar pero permitir deslizar */}
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      `}</style>
+
+      <div className="max-w-7xl mx-auto px-0 md:px-4 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 px-4">
+          Nuestros Quesos
+        </h2>
+        <p className="text-gray-600 mb-12 max-w-2xl mx-auto px-4">
           Calidad artesanal y sabor auténtico en cada bocado. Descubre la
           variedad perfecta para tus recetas.
         </p>
 
-        {/* --- Grilla de productos --- */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        {/* --- CONTENEDOR DE PRODUCTOS (SLIDER MOBILE / GRID DESKTOP) --- */}
+        <div
+          ref={productsRef}
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
+        >
           {products.map((product) => (
             <div
               key={product.id}
-              className="flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              // Ajuste Mobile: min-w-[85%] para efecto carrusel
+              className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
             >
               <button
                 type="button"
@@ -60,16 +84,15 @@ export default function Products() {
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-500"
                 />
-                {/* Overlay sutil al pasar el mouse */}
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </button>
 
               <div className="p-5 flex flex-col items-center flex-grow">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-gray-800 h-14">
+                <div className="mb-4 w-full">
+                  <h3 className="text-xl font-bold text-gray-800 h-auto md:h-14 flex items-center justify-center">
                     {product.name}
                   </h3>
-                  <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2">
+                  <p className="text-sm text-gray-500 mt-2 text-center line-clamp-2 px-2">
                     {product.description}
                   </p>
                 </div>
@@ -84,58 +107,88 @@ export default function Products() {
             </div>
           ))}
         </div>
+
+        {/* --- BOTONES DE CONTROL PARA MÓVIL --- */}
+        <div className="flex justify-center gap-4 md:hidden px-6 mt-2">
+          <button
+            onClick={() => scroll("left")}
+            aria-label="Anterior"
+            className="bg-white border border-gray-200 text-gray-700 p-3 rounded-full shadow-lg active:scale-95 transition-transform"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 19.5 8.25 12l7.5-7.5"
+              />
+            </svg>
+          </button>
+          <button
+            onClick={() => scroll("right")}
+            aria-label="Siguiente"
+            className="bg-primary text-white p-3 rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-transform"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={2}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m8.25 4.5 7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
 
-      {/* --- Modal Detallado --- */}
+      {/* --- Modal Detallado (Sin Cambios) --- */}
       {open && selected && (
         <>
-          {/* Fondo oscuro (backdrop) */}
           <div
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity"
             onClick={handleClose}
             aria-hidden="true"
           />
-
-          {/* Contenedor del modal */}
           <div
             role="dialog"
             aria-modal="true"
             aria-label={`Detalles de ${selected.name}`}
             ref={dialogRef}
             tabIndex={-1}
-            // Alineamos al inicio, añadimos padding superior y permitimos scroll
             className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-20 overflow-y-auto"
           >
-            {/* Contenedor de la tarjeta del modal con margen superior para el logo */}
             <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl relative animate-fadeIn">
-              {/* Logo Flotante (Desktop) */}
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
                 className="hidden md:block absolute -left-6 -top-12 h-24 w-auto rounded-xl shadow-lg z-50 border-2 border-white"
               />
-              {/* Logo Flotante (Móvil) */}
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
                 className="md:hidden absolute left-4 -top-12 h-20 w-auto rounded-lg shadow-lg z-50 border-2 border-white"
               />
-
-              {/* Botón Cerrar Flotante (Móvil) */}
               <button
                 onClick={handleClose}
-                // Ajustado para estar dentro del modal y no sobre el logo
                 className="md:hidden absolute right-3 -top-9 z-50 bg-white/80 rounded-full p-1 text-gray-600 hover:text-red-500"
               >
                 ✕
               </button>
 
-              {/* Contenedor con altura máxima y scroll */}
               <div className="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto rounded-2xl">
-                {/* COLUMNA 1: Imagen (Componente Optimizado) */}
                 <ModalImages selected={selected} />
-
-                {/* COLUMNA 2: Información */}
                 <div className="p-8 md:p-10 flex flex-col text-left">
                   <div className="hidden md:flex items-start justify-between mb-4">
                     <h3 className="text-3xl font-bold text-gray-900">
@@ -162,17 +215,12 @@ export default function Products() {
                       </svg>
                     </button>
                   </div>
-
-                  {/* Título en móvil (ya que el de arriba está oculto) */}
                   <h3 className="md:hidden text-2xl font-bold text-gray-900 mb-4 mt-2">
                     {selected.name}
                   </h3>
-
                   <p className="text-gray-600 text-lg leading-relaxed mb-6">
                     {selected.description}
                   </p>
-
-                  {/* Especificaciones */}
                   {Array.isArray(selected.specs) &&
                     selected.specs.length > 0 && (
                       <div className="bg-gray-50 rounded-xl p-5 mb-8 border border-gray-100">
@@ -189,10 +237,11 @@ export default function Products() {
                         </ul>
                       </div>
                     )}
-
                   <div className="mt-auto">
                     <Link
-                      to={`/pedir?producto=${encodeURIComponent(selected.name)}`}
+                      to={`/pedir?producto=${encodeURIComponent(
+                        selected.name
+                      )}`}
                       className="w-full md:w-auto inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-primary text-black font-bold text-lg hover:bg-yellow-400 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
                     >
                       <span>Hacer pedido</span>
@@ -208,35 +257,28 @@ export default function Products() {
   );
 }
 
-// --- SUBCOMPONENTE DE IMÁGENES (OPTIMIZADO PARA TU SITUACIÓN) ---
+// --- SUBCOMPONENTE DE IMÁGENES (Igual que antes) ---
 function ModalImages({ selected }) {
-  // Estado para la galería de imágenes (si no hay video)
   const [showAltImage, setShowAltImage] = useState(false);
-  // Estado para controlar la reproducción del video
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
-  // Estado para saber si el video ya se reprodujo una vez (para el efecto sorpresa)
   const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
 
   const hasVideo = Boolean(selected.videoSrc);
   const canToggleImages = Boolean(selected.imageAlt);
 
-  // Reinicia el estado cuando el producto seleccionado cambia
   useEffect(() => {
     setHasPlayedOnce(false);
     setIsPlayingVideo(false);
     setShowAltImage(false);
   }, [selected.id]);
 
-  // Reproduce el video automáticamente después de 3 segundos
   useEffect(() => {
     let timer;
     if (hasVideo) {
       timer = setTimeout(() => {
         setIsPlayingVideo(true);
-      }, 3000); // 3 segundos de espera
+      }, 3000);
     }
-
-    // Limpia el temporizador si el componente se desmonta o el producto cambia
     return () => {
       clearTimeout(timer);
     };
@@ -251,12 +293,11 @@ function ModalImages({ selected }) {
 
   const handleVideoEnd = () => {
     setIsPlayingVideo(false);
-    setHasPlayedOnce(true); // Marcamos que ya se reprodujo
+    setHasPlayedOnce(true);
   };
 
   return (
     <div className="relative h-80 md:h-full bg-white md:rounded-l-2xl overflow-hidden group">
-      {/* Lógica con Video */}
       {hasVideo && (
         <>
           <img
@@ -266,11 +307,9 @@ function ModalImages({ selected }) {
               isPlayingVideo ? "opacity-0" : "opacity-100"
             }`}
           />
-          {/* El botón de play solo aparece si el video no se está reproduciendo Y ya se vio al menos una vez */}
           {!isPlayingVideo && hasPlayedOnce && (
             <button
               onClick={handlePlayVideo}
-              // Se muestra al pasar el mouse
               className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"
               aria-label="Reproducir video"
             >
@@ -297,7 +336,6 @@ function ModalImages({ selected }) {
         </>
       )}
 
-      {/* Lógica sin Video (Galería de imágenes) */}
       {!hasVideo && (
         <>
           <img
@@ -321,7 +359,11 @@ function ModalImages({ selected }) {
                   aria-label={
                     isAlt ? "Ver imagen alternativa" : "Ver imagen principal"
                   }
-                  className={`h-4 w-4 rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-125 ${showAltImage === isAlt ? "bg-primary scale-110" : "bg-white/60 hover:bg-white"}`}
+                  className={`h-4 w-4 rounded-full border-2 border-white shadow-lg transition-all transform hover:scale-125 ${
+                    showAltImage === isAlt
+                      ? "bg-primary scale-110"
+                      : "bg-white/60 hover:bg-white"
+                  }`}
                 />
               ))}
             </div>
@@ -329,7 +371,6 @@ function ModalImages({ selected }) {
         </>
       )}
 
-      {/* Sombra suave abajo para que los botones de la galería resalten */}
       {!hasVideo && canToggleImages && (
         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
       )}

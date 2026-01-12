@@ -5,12 +5,14 @@ import calidad from "../../assets/images/about/calidad.jpg";
 import somos from "../../assets/images/about/somos.jpg";
 import quesos from "../../assets/images/about/quesos.jpg";
 import produccion from "../../assets/images/about/produccion.jpg";
+// NOTA: Asegúrate de tener una imagen para la visión o reutiliza una existente (ej: planta)
+import vision from "../../assets/images/about/vision.jpg";
 
 export const ABOUT_SECTIONS = [
   {
     id: "historia",
     title: "¿Quiénes somos?",
-    body: "Quesillos Manuelita S.A.S. es más que una empresa; es un sueño hecho realidad en el corazón de Antioquia. Fundada el 1 de noviembre de 2017, esta compañía ha florecido en la pintoresca vereda Santa Ana, en Santa Rosa de Osos, donde la tradición y la innovación se entrelazan para crear productos lácteos de calidad excepcional.",
+    body: "Quesillos Manuelita S.A.S. es más que una empresa; es un sueño hecho realidad en el corazón de Antioquia. Fundada el 1 de noviembre de 2017, en Santa Rosa de Osos, donde la tradición y la innovación se entrelazan para crear productos lácteos de calidad excepcional.",
     media: {
       type: "image",
       src: somos,
@@ -20,9 +22,21 @@ export const ABOUT_SECTIONS = [
   {
     id: "nuestra-mision",
     title: "Nuestra misión",
-    body: "En Quesillos Manuelita S.A.S elaboramos y comercializamos Queso Mozzarella; con un equipo de trabajo integro, comprometido con la excelencia en la producción, comercialización y la calidad integral; contribuyendo al bienestar de nuestros empleados, la satisfacción de aliados estratégicos, creando experiencias únicas para los clientes y con un profundo respeto por las normas y el medio ambiente.",
+    body: "En Quesillos Manuelita S.A.S elaboramos y comercializamos Queso Mozzarella con un equipo de trabajo integro, comprometido con la excelencia en la producción, comercialización y la calidad integral, contribuyendo al bienestar de nuestros empleados, la satisfacción de aliados estratégicos, creando experiencias únicas para los clientes y con un profundo respeto por las normas y el medio ambiente.",
     media: { type: "image", src: quesos, alt: "Campo de Santa Rosa de Osos" },
   },
+  // --- NUEVA SECCIÓN AGREGADA: VISIÓN ---
+  {
+    id: "nuestra-vision",
+    title: "Nuestra Visión",
+    body: "Ser reconocidos a nivel nacional como los embajadores del sabor lácteo de Santa Rosa de Osos. Nos proyectamos hacia el futuro innovando con nuevas líneas de productos saludables y expandiendo nuestra red de distribución, manteniendo siempre la esencia artesanal y el compromiso social que nos caracteriza como familia.",
+    media: {
+      type: "image",
+      src: vision, // Si no tienes imagen 'vision.jpg', cambia esto por 'planta' o 'produccion' temporalmente
+      alt: "Proyección futuro Quesillos Manuelita",
+    },
+  },
+  // --------------------------------------
   {
     id: "producción",
     title: "Producción",
