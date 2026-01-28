@@ -6,6 +6,7 @@ import About from "./features/about/About";
 import Contact from "./features/contact/contact";
 import Footer from "./features/footer/Footer";
 import OrderPage from "./features/order/OrderPage";
+import WhatsAppFloat from "./components/WhatsAppFloat";
 
 // Creamos un componente para la página de inicio que agrupa la vista principal
 function HomePage() {
@@ -23,10 +24,13 @@ function HomePage() {
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/pedir" element={<OrderPage />} />
-    </Routes>
+    <>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/pedir" element={<OrderPage />} />
+      </Routes>
+      <WhatsAppFloat />
+    </>
   );
 }
 
