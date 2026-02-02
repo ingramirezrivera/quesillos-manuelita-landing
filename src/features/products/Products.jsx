@@ -73,10 +73,14 @@ export default function Products() {
               // Ajuste Mobile: min-w-[85%] para efecto carrusel
               className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
             >
-              <button
-                type="button"
+              <div
+                role="button"
+                tabIndex={0}
                 onClick={() => handleOpen(product)}
-                className="block w-auto h-100 overflow-hidden group relative"
+                onKeyDown={(e) =>
+                  (e.key === "Enter" || e.key === " ") && handleOpen(product)
+                }
+                className="block w-auto h-100 overflow-hidden group relative cursor-pointer"
                 aria-label={`Ver detalles de ${product.name}`}
               >
                 <img
@@ -85,7 +89,7 @@ export default function Products() {
                   className="w-full h-full object-cover transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-              </button>
+              </div>
 
               <div className="p-5 flex flex-col items-center flex-grow">
                 <div className="mb-4 w-full">
@@ -240,7 +244,7 @@ export default function Products() {
                   <div className="mt-auto">
                     <Link
                       to={`/pedir?producto=${encodeURIComponent(
-                        selected.name
+                        selected.name,
                       )}`}
                       className="w-full md:w-auto inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-primary text-black font-bold text-lg hover:bg-yellow-400 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
                     >
