@@ -70,7 +70,7 @@ export default function Footer() {
           {/* Bloque Districatar */}
           <div className="mb-8">
             <h3 className="text-white text-xs font-bold uppercase tracking-widest mb-4 opacity-70">
-              Distribuidor Oficial
+              Donde comprar
             </h3>
             <div className="bg-white/5 p-4 rounded-xl inline-block border border-white/10">
               <img
