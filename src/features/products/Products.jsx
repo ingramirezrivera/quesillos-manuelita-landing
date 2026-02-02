@@ -65,7 +65,8 @@ export default function Products() {
         {/* --- CONTENEDOR DE PRODUCTOS (SLIDER MOBILE / GRID DESKTOP) --- */}
         <div
           ref={productsRef}
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
+          // CORRECCIÓN 1: 'touch-pan-x' mejora la respuesta del dedo en el eje X
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8 touch-pan-x"
         >
           {products.map((product) => (
             <div
@@ -80,13 +81,16 @@ export default function Products() {
                 onKeyDown={(e) =>
                   (e.key === "Enter" || e.key === " ") && handleOpen(product)
                 }
-                className="block w-auto h-100 overflow-hidden group relative cursor-pointer"
+                className="block w-auto h-100 overflow-hidden group relative cursor-pointer select-none" // CORRECCIÓN 2: select-none evita selecciones azules al arrastrar
                 aria-label={`Ver detalles de ${product.name}`}
               >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500"
+                  // CORRECCIÓN 3: draggable={false} es VITAL. Evita que el navegador intente arrastrar la imagen en lugar de mover el slider
+                  draggable={false}
+                  onDragStart={(e) => e.preventDefault()}
+                  className="w-full h-full object-cover transition-transform duration-500 select-none"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
               </div>
@@ -349,6 +353,8 @@ function ModalImages({ selected }) {
                 : selected.image
             }
             alt={selected.name}
+            // Agregado también aquí por si acaso se arrastra dentro del modal, aunque el problema principal era el slider.
+            draggable={false}
             className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
           />
           {canToggleImages && (
