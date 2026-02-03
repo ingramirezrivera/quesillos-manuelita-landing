@@ -8,7 +8,6 @@ export default function Products() {
   const [selected, setSelected] = useState(null);
   const dialogRef = useRef(null);
 
-  // 1. Referencia para el Slider de Productos
   const productsRef = useRef(null);
 
   const handleOpen = (product) => {
@@ -21,17 +20,14 @@ export default function Products() {
     setSelected(null);
   };
 
-  // 2. Función para mover el slider con botones
   const scroll = (direction) => {
     if (productsRef.current) {
       const { current } = productsRef;
-      // Desplaza aprox el ancho de una tarjeta + gap
       const scrollAmount = direction === "left" ? -300 : 300;
       current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
 
-  // Manejo de ESC y bloqueo scroll (Modal)
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && handleClose();
     if (open) {
@@ -47,7 +43,6 @@ export default function Products() {
 
   return (
     <section id="products" className="py-16 bg-white relative">
-      {/* Estilos para ocultar scrollbar pero permitir deslizar */}
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -62,37 +57,31 @@ export default function Products() {
           variedad perfecta para tus recetas.
         </p>
 
-        {/* --- CONTENEDOR DE PRODUCTOS (SLIDER MOBILE / GRID DESKTOP) --- */}
+        {/* --- CONTENEDOR DE PRODUCTOS --- */}
         <div
           ref={productsRef}
-          // CORRECCIÓN 1: 'touch-pan-x' mejora la respuesta del dedo en el eje X
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8 touch-pan-x"
+          // Se mantiene la estructura flex nativa.
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
         >
           {products.map((product) => (
             <div
               key={product.id}
-              // Ajuste Mobile: min-w-[85%] para efecto carrusel
-              className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+              // CORRECCIÓN: Se eliminó 'shrink-0' para volver al comportamiento de tamaño original.
+              // Se mantiene 'min-w-[85%]' y 'touch-manipulation' para el scroll.
+              className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 touch-manipulation"
             >
               <div
-                role="button"
-                tabIndex={0}
                 onClick={() => handleOpen(product)}
-                onKeyDown={(e) =>
-                  (e.key === "Enter" || e.key === " ") && handleOpen(product)
-                }
-                className="block w-auto h-100 overflow-hidden group relative cursor-pointer select-none" // CORRECCIÓN 2: select-none evita selecciones azules al arrastrar
-                aria-label={`Ver detalles de ${product.name}`}
+                className="block w-auto h-100 overflow-hidden group relative cursor-pointer select-none"
               >
                 <img
                   src={product.image}
                   alt={product.name}
-                  // CORRECCIÓN 3: draggable={false} es VITAL. Evita que el navegador intente arrastrar la imagen en lugar de mover el slider
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
                   className="w-full h-full object-cover transition-transform duration-500 select-none"
                 />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/10 transition-colors duration-300" />
               </div>
 
               <div className="p-5 flex flex-col items-center flex-grow">
@@ -265,7 +254,6 @@ export default function Products() {
   );
 }
 
-// --- SUBCOMPONENTE DE IMÁGENES (Igual que antes) ---
 function ModalImages({ selected }) {
   const [showAltImage, setShowAltImage] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
@@ -353,9 +341,8 @@ function ModalImages({ selected }) {
                 : selected.image
             }
             alt={selected.name}
-            // Agregado también aquí por si acaso se arrastra dentro del modal, aunque el problema principal era el slider.
             draggable={false}
-            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-105"
+            className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 md:group-hover:scale-105"
           />
           {canToggleImages && (
             <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-4 z-20">
