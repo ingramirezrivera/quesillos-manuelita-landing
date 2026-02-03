@@ -222,7 +222,7 @@ export default function About() {
               <div
                 key={index}
                 // CAMBIO REALIZADO: min-w-[95%] para que la tarjeta sea más ancha en móvil
-                className="min-w-[95%] md:min-w-0 snap-center group bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden"
+                className="w-[95%] shrink-0 md:min-w-0 snap-center group bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col overflow-hidden"
               >
                 {/* Contenedor de TEXTO */}
                 <div className="p-8 pb-0 flex-grow flex flex-col">

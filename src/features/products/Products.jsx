@@ -68,7 +68,7 @@ export default function Products() {
               key={product.id}
               // CORRECCIÓN: Se eliminó 'shrink-0' para volver al comportamiento de tamaño original.
               // Se mantiene 'min-w-[85%]' y 'touch-manipulation' para el scroll.
-              className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 touch-manipulation"
+              className="w-[85%] shrink-0 md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100"
             >
               <div
                 onClick={() => handleOpen(product)}
