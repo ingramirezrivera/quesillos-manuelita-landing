@@ -215,7 +215,7 @@ export default function About() {
       <div className="pt-10 md:pt-32 pb-20 px-0 md:px-6 max-w-7xl mx-auto relative z-20">
         <div
           ref={carouselRef}
-          className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
+          className="flex md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 overflow-x-scroll md:overflow-visible snap-x md:snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
         >
           {ABOUT_SECTIONS.map((section, index) => {
             return (

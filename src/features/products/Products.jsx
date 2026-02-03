@@ -61,7 +61,7 @@ export default function Products() {
         <div
           ref={productsRef}
           // Se mantiene la estructura flex nativa.
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-scroll md:overflow-visible snap-x md:snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
         >
           {products.map((product) => (
             <div
