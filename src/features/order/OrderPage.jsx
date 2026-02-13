@@ -2,7 +2,7 @@ import { useSearchParams, Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
 // 1. Importa los logos de los distribuidores
 import districatarLogo from "../../assets/images/distributors/districatar-logo.png";
-import pabloQuesosLogo from "../../assets/images/distributors/pablo-quesos-logo.png";
+import distriCheeseLogo from "../../assets/images/distributors/distri-cheese-logo.jpeg";
 
 // --- DATOS DE LOS DISTRIBUIDORES ---
 // Cuando tengas los logos, puedes poner la ruta en la propiedad `logoSrc`
@@ -15,11 +15,11 @@ const distributors = [
     logoSrc: districatarLogo, // 2. Asigna el logo importado
   },
   {
-    id: "pabloquesos",
-    name: "Pablo Quesos",
+    id: "districheese",
+    name: "Distri Cheese",
     area: "Oriente y Valle de San Nicolás",
-    phone: "573042091223", // Temporal, luego añadir el de Pablo Quesos
-    logoSrc: pabloQuesosLogo, // 3. Asigna el logo importado
+    phone: "573042091223", // Temporal, luego añadir el de Distri Cheese
+    logoSrc: distriCheeseLogo, // 3. Asigna el logo importado
   },
 ];
 
@@ -54,14 +54,14 @@ export default function OrderPage() {
         {distributors.map((dist) => (
           <div
             key={dist.id}
-            className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2"
+            className="bg-white rounded-2xl shadow-lg p-8 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 h-full"
           >
             {/* Aquí irá el logo del distribuidor cuando lo tengas */}
             {dist.logoSrc ? (
               <img
                 src={dist.logoSrc}
                 alt={dist.name}
-                className={`${dist.id === "districatar" ? "h-40" : "h-36"} mb-4`}
+                className={`${dist.id === "districatar" ? "h-44" : "h-40"} w-auto max-w-full mb-4 object-contain`}
               />
             ) : (
               <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
@@ -119,3 +119,5 @@ export default function OrderPage() {
     </div>
   );
 }
+
+

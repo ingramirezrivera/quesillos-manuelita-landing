@@ -6,7 +6,11 @@ import logo from "../../assets/images/logos/logo.jpeg";
 export default function Products() {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(null);
+  const [activeScrollDir, setActiveScrollDir] = useState("right");
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
   const dialogRef = useRef(null);
+  const lastFocusedRef = useRef(null);
 
   const productsRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
@@ -25,6 +29,16 @@ export default function Products() {
   const scroll = (direction) => {
     if (productsRef.current) {
       const { current } = productsRef;
+      const threshold = 8;
+      const maxScrollLeft = current.scrollWidth - current.clientWidth;
+      const canMoveLeft = current.scrollLeft > threshold;
+      const canMoveRight = current.scrollLeft < maxScrollLeft - threshold;
+
+      if ((direction === "left" && !canMoveLeft) || (direction === "right" && !canMoveRight)) {
+        return;
+      }
+
+      setActiveScrollDir(direction);
       const cardWidth = current.firstElementChild?.clientWidth || 300;
       const gap = 24;
       const step = cardWidth + gap;
@@ -57,23 +71,125 @@ export default function Products() {
   };
 
   useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && handleClose();
+    const container = productsRef.current;
+    if (!container) return;
+
+    const threshold = 8;
+    const updateActiveDirectionByBounds = () => {
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const atStart = container.scrollLeft <= threshold;
+      const atEnd = container.scrollLeft >= maxScrollLeft - threshold;
+      const hasOverflow = maxScrollLeft > threshold;
+
+      setCanScrollLeft(hasOverflow && !atStart);
+      setCanScrollRight(hasOverflow && !atEnd);
+
+      if (maxScrollLeft <= threshold) {
+        setActiveScrollDir("right");
+        return;
+      }
+
+      if (atStart) {
+        setActiveScrollDir("right");
+      } else if (atEnd) {
+        setActiveScrollDir("left");
+      }
+    };
+
+    updateActiveDirectionByBounds();
+    container.addEventListener("scroll", updateActiveDirectionByBounds, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateActiveDirectionByBounds);
+
+    return () => {
+      container.removeEventListener("scroll", updateActiveDirectionByBounds);
+      window.removeEventListener("resize", updateActiveDirectionByBounds);
+    };
+  }, []);
+
+  useEffect(() => {
+    const getFocusableElements = (root) => {
+      if (!root) return [];
+      return Array.from(
+        root.querySelectorAll(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    };
+
+    const onKey = (e) => {
+      if (e.key === "Escape") {
+        handleClose();
+        return;
+      }
+
+      if (e.key !== "Tab" || !open || !dialogRef.current) return;
+      const focusables = getFocusableElements(dialogRef.current);
+      if (!focusables.length) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
     if (open) {
+      lastFocusedRef.current = document.activeElement;
       document.addEventListener("keydown", onKey);
       document.body.classList.add("overflow-hidden");
-      setTimeout(() => dialogRef.current?.focus(), 0);
+      setTimeout(() => {
+        const focusables = getFocusableElements(dialogRef.current);
+        if (focusables.length) {
+          focusables[0].focus();
+        } else {
+          dialogRef.current?.focus();
+        }
+      }, 0);
     }
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.classList.remove("overflow-hidden");
+      if (lastFocusedRef.current?.focus) {
+        lastFocusedRef.current.focus();
+      }
     };
   }, [open]);
 
   return (
-    <section id="products" className="py-16 bg-white relative z-20">
+    <section id="products" className="py-16 bg-white relative">
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes pulse-cta-scale {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.04); }
+        }
+        .pulse-cta {
+          position: relative;
+          isolation: isolate;
+        }
+        .pulse-cta::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          border-radius: inherit;
+          background: inherit;
+          transform-origin: center;
+          animation: pulse-cta-scale 1.8s ease-in-out infinite;
+          z-index: 0;
+          pointer-events: none;
+        }
+        .pulse-cta > * {
+          position: relative;
+          z-index: 1;
+        }
       `}</style>
 
       <div className="max-w-7xl mx-auto px-0 md:px-4 text-center">
@@ -88,7 +204,7 @@ export default function Products() {
         {/* --- CONTENEDOR DE PRODUCTOS --- */}
         <div
           ref={productsRef}
-          className="relative z-[70] flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-proximity hide-scrollbar px-6 md:px-0 pb-8 w-full"
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-proximity hide-scrollbar px-6 md:px-0 pb-8 w-full"
           style={{
             WebkitOverflowScrolling: "touch",
             touchAction: "pan-x pan-y",
@@ -148,11 +264,16 @@ export default function Products() {
         </div>
 
         {/* --- BOTONES DE CONTROL PARA MÓVIL --- */}
-        <div className="relative z-[80] flex justify-center gap-4 md:hidden px-6 mt-2">
+        <div className="flex justify-center gap-4 md:hidden px-6 mt-2">
           <button
             onClick={() => scroll("left")}
             aria-label="Anterior"
-            className="bg-white border border-gray-200 text-gray-700 p-3 rounded-full shadow-lg active:scale-95 transition-transform"
+            disabled={!canScrollLeft}
+            className={`p-3 rounded-full shadow-lg active:scale-95 transition-transform ${
+              activeScrollDir === "left"
+                ? "bg-primary text-black shadow-primary/30"
+                : "bg-white border border-gray-200 text-gray-700"
+            } ${!canScrollLeft ? "opacity-50 cursor-not-allowed active:scale-100" : ""}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +293,12 @@ export default function Products() {
           <button
             onClick={() => scroll("right")}
             aria-label="Siguiente"
-            className="bg-primary text-white p-3 rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-transform"
+            disabled={!canScrollRight}
+            className={`p-3 rounded-full shadow-lg active:scale-95 transition-transform ${
+              activeScrollDir === "right"
+                ? "bg-primary text-black shadow-primary/30"
+                : "bg-white border border-gray-200 text-gray-700"
+            } ${!canScrollRight ? "opacity-50 cursor-not-allowed active:scale-100" : ""}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -203,12 +329,35 @@ export default function Products() {
           <div
             role="dialog"
             aria-modal="true"
-            aria-label={`Detalles de ${selected.name}`}
+            aria-labelledby="product-modal-title"
+            aria-describedby="product-modal-description"
             ref={dialogRef}
             tabIndex={-1}
             className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-20 overflow-y-auto"
           >
-            <div className="w-full max-w-5xl bg-white rounded-2xl shadow-2xl relative animate-fadeIn">
+            <div className="relative w-full max-w-5xl">
+              <button
+                onClick={handleClose}
+                aria-label="Cerrar modal"
+                className="absolute -top-3 right-2 md:-top-4 md:-right-4 z-50 bg-white rounded-full p-2 shadow-lg border border-gray-200 text-gray-700 hover:text-red-500 hover:bg-gray-50 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+
+              <div className="w-full bg-white rounded-2xl shadow-2xl relative animate-fadeIn">
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
@@ -219,46 +368,24 @@ export default function Products() {
                 alt="Quesillos Manuelita"
                 className="md:hidden absolute left-4 -top-12 h-20 w-auto rounded-lg shadow-lg z-50 border-2 border-white"
               />
-              <button
-                onClick={handleClose}
-                className="md:hidden absolute right-3 -top-9 z-50 bg-white/80 rounded-full p-1 text-gray-600 hover:text-red-500"
-              >
-                ✕
-              </button>
-
               <div className="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto rounded-2xl">
                 <ModalImages selected={selected} />
                 <div className="p-8 md:p-10 flex flex-col text-left">
+                  <h3 id="product-modal-title" className="sr-only">
+                    {selected.name}
+                  </h3>
                   <div className="hidden md:flex items-start justify-between mb-4">
                     <h3 className="text-3xl font-bold text-gray-900">
                       {selected.name}
                     </h3>
-                    <button
-                      onClick={handleClose}
-                      className="text-gray-400 hover:text-gray-700 transition-colors p-1"
-                      aria-label="Cerrar"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
                   </div>
                   <h3 className="md:hidden text-2xl font-bold text-gray-900 mb-4 mt-2">
                     {selected.name}
                   </h3>
                   <p className="text-gray-600 text-lg leading-relaxed mb-6">
+                    <span id="product-modal-description">
                     {selected.description}
+                    </span>
                   </p>
                   {Array.isArray(selected.specs) &&
                     selected.specs.length > 0 && (
@@ -281,13 +408,14 @@ export default function Products() {
                       to={`/pedir?producto=${encodeURIComponent(
                         selected.name,
                       )}`}
-                      className="w-full md:w-auto inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-primary text-black font-bold text-lg hover:bg-yellow-400 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
+                      className="pulse-cta w-full md:w-auto inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-primary text-black font-bold text-lg hover:bg-yellow-400 transition-colors"
                     >
                       <span>Hacer pedido</span>
                     </Link>
                   </div>
                 </div>
               </div>
+            </div>
             </div>
           </div>
         </>

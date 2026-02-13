@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./features/hero/Hero";
 import Products from "./features/products/Products";
@@ -23,13 +23,16 @@ function HomePage() {
 }
 
 function App() {
+  const { pathname } = useLocation();
+  const showWhatsAppFloat = pathname !== "/pedir";
+
   return (
     <>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/pedir" element={<OrderPage />} />
       </Routes>
-      <WhatsAppFloat />
+      {showWhatsAppFloat && <WhatsAppFloat />}
     </>
   );
 }

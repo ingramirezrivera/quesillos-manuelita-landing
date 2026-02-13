@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ReCAPTCHA from "react-google-recaptcha"; // 👈 1. Importamos la librería
 import logo from "../../assets/images/contact/districatar-logo.png";
-import logoCheese from "../../assets/images/contact/distri-cheese-logo.png";
+import logoCheese from "../../assets/images/distributors/distri-cheese-logo.jpeg";
 
 export default function Contact() {
   // Estado para verificar si el captcha fue resuelto

@@ -1,17 +1,68 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ABOUT_SECTIONS } from "./aboutData";
 import fondo from "../../assets/images/about/fondo-about.jpg";
 
 export default function About() {
   const carouselRef = useRef(null);
+  const [activeScrollDir, setActiveScrollDir] = useState("right");
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   const scroll = (direction) => {
     if (carouselRef.current) {
       const { current } = carouselRef;
+      const threshold = 8;
+      const maxScrollLeft = current.scrollWidth - current.clientWidth;
+      const canMoveLeft = current.scrollLeft > threshold;
+      const canMoveRight = current.scrollLeft < maxScrollLeft - threshold;
+
+      if ((direction === "left" && !canMoveLeft) || (direction === "right" && !canMoveRight)) {
+        return;
+      }
+
+      setActiveScrollDir(direction);
       const scrollAmount = direction === "left" ? -320 : 320;
       current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
   };
+
+  useEffect(() => {
+    const container = carouselRef.current;
+    if (!container) return;
+
+    const threshold = 8;
+    const updateActiveDirectionByBounds = () => {
+      const maxScrollLeft = container.scrollWidth - container.clientWidth;
+      const atStart = container.scrollLeft <= threshold;
+      const atEnd = container.scrollLeft >= maxScrollLeft - threshold;
+      const hasOverflow = maxScrollLeft > threshold;
+
+      setCanScrollLeft(hasOverflow && !atStart);
+      setCanScrollRight(hasOverflow && !atEnd);
+
+      if (maxScrollLeft <= threshold) {
+        setActiveScrollDir("right");
+        return;
+      }
+
+      if (atStart) {
+        setActiveScrollDir("right");
+      } else if (atEnd) {
+        setActiveScrollDir("left");
+      }
+    };
+
+    updateActiveDirectionByBounds();
+    container.addEventListener("scroll", updateActiveDirectionByBounds, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateActiveDirectionByBounds);
+
+    return () => {
+      container.removeEventListener("scroll", updateActiveDirectionByBounds);
+      window.removeEventListener("resize", updateActiveDirectionByBounds);
+    };
+  }, []);
 
   const stats = [
     { number: "15+", label: "Años de experiencia", icon: "calendar" },
@@ -261,7 +312,12 @@ export default function About() {
           <button
             onClick={() => scroll("left")}
             aria-label="Anterior"
-            className="bg-white border border-slate-200 text-primary p-3 rounded-full shadow-lg active:scale-95 transition-transform"
+            disabled={!canScrollLeft}
+            className={`p-3 rounded-full shadow-lg active:scale-95 transition-transform ${
+              activeScrollDir === "left"
+                ? "bg-primary text-black shadow-primary/30"
+                : "bg-white border border-slate-200 text-primary"
+            } ${!canScrollLeft ? "opacity-50 cursor-not-allowed active:scale-100" : ""}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +337,12 @@ export default function About() {
           <button
             onClick={() => scroll("right")}
             aria-label="Siguiente"
-            className="bg-primary text-white p-3 rounded-full shadow-lg shadow-primary/30 active:scale-95 transition-transform"
+            disabled={!canScrollRight}
+            className={`p-3 rounded-full shadow-lg active:scale-95 transition-transform ${
+              activeScrollDir === "right"
+                ? "bg-primary text-black shadow-primary/30"
+                : "bg-white border border-slate-200 text-primary"
+            } ${!canScrollRight ? "opacity-50 cursor-not-allowed active:scale-100" : ""}`}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

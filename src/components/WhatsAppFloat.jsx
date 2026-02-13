@@ -26,7 +26,7 @@ export default function WhatsAppFloat() {
     "Hola, estoy interesado en los productos de Quesillos Manuelita.";
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4 pointer-events-none">
+    <div className="fixed bottom-6 right-6 z-30 flex flex-col items-end gap-4 pointer-events-none">
       {/* --- TARJETA DE CHAT (Se muestra solo si isOpen es true) --- */}
       <div
         className={`w-72 bg-[#e5ddd5] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right transform ${
