@@ -4,6 +4,12 @@ import fondo from "../../assets/images/about/fondo-about.jpg";
 
 export default function About() {
   const carouselRef = useRef(null);
+  const rafRef = useRef(0);
+  const scrollStateRef = useRef({
+    canScrollLeft: false,
+    canScrollRight: true,
+    activeScrollDir: "right",
+  });
   const [activeScrollDir, setActiveScrollDir] = useState("right");
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
@@ -36,31 +42,51 @@ export default function About() {
       const atStart = container.scrollLeft <= threshold;
       const atEnd = container.scrollLeft >= maxScrollLeft - threshold;
       const hasOverflow = maxScrollLeft > threshold;
+      const nextCanScrollLeft = hasOverflow && !atStart;
+      const nextCanScrollRight = hasOverflow && !atEnd;
 
-      setCanScrollLeft(hasOverflow && !atStart);
-      setCanScrollRight(hasOverflow && !atEnd);
+      let nextActiveScrollDir = scrollStateRef.current.activeScrollDir;
 
-      if (maxScrollLeft <= threshold) {
-        setActiveScrollDir("right");
-        return;
+      if (maxScrollLeft <= threshold || atStart) {
+        nextActiveScrollDir = "right";
+      } else if (atEnd) {
+        nextActiveScrollDir = "left";
       }
 
-      if (atStart) {
-        setActiveScrollDir("right");
-      } else if (atEnd) {
-        setActiveScrollDir("left");
+      if (scrollStateRef.current.canScrollLeft !== nextCanScrollLeft) {
+        scrollStateRef.current.canScrollLeft = nextCanScrollLeft;
+        setCanScrollLeft(nextCanScrollLeft);
+      }
+      if (scrollStateRef.current.canScrollRight !== nextCanScrollRight) {
+        scrollStateRef.current.canScrollRight = nextCanScrollRight;
+        setCanScrollRight(nextCanScrollRight);
+      }
+      if (scrollStateRef.current.activeScrollDir !== nextActiveScrollDir) {
+        scrollStateRef.current.activeScrollDir = nextActiveScrollDir;
+        setActiveScrollDir(nextActiveScrollDir);
       }
     };
 
+    const scheduleUpdate = () => {
+      if (rafRef.current) return;
+      rafRef.current = window.requestAnimationFrame(() => {
+        rafRef.current = 0;
+        updateActiveDirectionByBounds();
+      });
+    };
+
     updateActiveDirectionByBounds();
-    container.addEventListener("scroll", updateActiveDirectionByBounds, {
+    container.addEventListener("scroll", scheduleUpdate, {
       passive: true,
     });
-    window.addEventListener("resize", updateActiveDirectionByBounds);
+    window.addEventListener("resize", scheduleUpdate);
 
     return () => {
-      container.removeEventListener("scroll", updateActiveDirectionByBounds);
-      window.removeEventListener("resize", updateActiveDirectionByBounds);
+      container.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      if (rafRef.current) {
+        window.cancelAnimationFrame(rafRef.current);
+      }
     };
   }, []);
 

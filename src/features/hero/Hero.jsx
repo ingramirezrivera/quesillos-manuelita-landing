@@ -25,6 +25,18 @@ export default function Hero() {
   const videoSlide = slides[0];
 
   useEffect(() => {
+    const preloadId = "hero-poster-preload";
+    if (document.getElementById(preloadId)) return;
+
+    const link = document.createElement("link");
+    link.id = preloadId;
+    link.rel = "preload";
+    link.as = "image";
+    link.href = videoSlide.poster;
+    document.head.appendChild(link);
+  }, [videoSlide.poster]);
+
+  useEffect(() => {
     if (!isPosterLoaded) return;
     if (!canLoadHeroVideo()) return;
 

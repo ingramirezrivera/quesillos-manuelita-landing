@@ -1,9 +1,10 @@
 ﻿import { Link } from "react-router-dom";
-import { useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha"; // 1. Importamos la librería
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import logo from "../../assets/images/contact/districatar-logo.png";
 import logoCheese from "../../assets/images/distributors/distri-cheese-logo.jpeg";
 import { trackWhatsAppClick } from "../../utils/tracking";
+
+const ReCAPTCHALazy = lazy(() => import("react-google-recaptcha"));
 
 export default function Contact() {
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
@@ -11,6 +12,8 @@ export default function Contact() {
   const [isVerified, setIsVerified] = useState(false);
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const [acceptDataPolicy, setAcceptDataPolicy] = useState(false);
+  const [shouldLoadCaptcha, setShouldLoadCaptcha] = useState(false);
+  const sectionRef = useRef(null);
 
   // 2. Función que se ejecuta cuando el usuario resuelve el captcha
   const handleCaptchaChange = (value) => {
@@ -23,8 +26,33 @@ export default function Contact() {
     }
   };
 
+  const loadCaptcha = () => setShouldLoadCaptcha(true);
+
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node || shouldLoadCaptcha) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (!entry?.isIntersecting) return;
+        setShouldLoadCaptcha(true);
+        observer.disconnect();
+      },
+      { rootMargin: "200px 0px", threshold: 0.1 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldLoadCaptcha]);
+
   return (
-    <section id="contact" className="py-20 bg-gray-100">
+    <section
+      ref={sectionRef}
+      id="contact"
+      className="py-20 bg-gray-100"
+      onFocusCapture={loadCaptcha}
+    >
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
@@ -314,10 +342,20 @@ export default function Contact() {
               {/* 3. AQUÍ ESTÁ EL COMPONENTE RECAPTCHA */}
               <div className="col-span-1 md:col-span-2 flex justify-center md:justify-start">
                 {recaptchaSiteKey ? (
-                  <ReCAPTCHA
-                    sitekey={recaptchaSiteKey}
-                    onChange={handleCaptchaChange}
-                  />
+                  shouldLoadCaptcha ? (
+                    <Suspense
+                      fallback={
+                        <div className="h-[78px] w-[304px] rounded border border-gray-200 bg-gray-50 animate-pulse" />
+                      }
+                    >
+                      <ReCAPTCHALazy
+                        sitekey={recaptchaSiteKey}
+                        onChange={handleCaptchaChange}
+                      />
+                    </Suspense>
+                  ) : (
+                    <div className="h-[78px] w-[304px] rounded border border-gray-200 bg-gray-50" />
+                  )
                 ) : (
                   <div className="w-full max-w-md rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-800">
                     Falta configurar reCAPTCHA. Define{" "}
@@ -371,6 +409,8 @@ export default function Contact() {
     </section>
   );
 }
+
+
 
 
 
