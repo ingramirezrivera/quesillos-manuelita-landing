@@ -114,6 +114,7 @@ Fuentes de eventos:
 ## SEO y salida a dominio
 Checklist de publicacion:
 - `docs/SEO_LAUNCH_CHECKLIST.md`
+- `docs/HOSTINGER_DEPLOY.md`
 
 Antes de publicar con dominio:
 1. Configurar `VITE_SITE_URL`.
