@@ -18,8 +18,8 @@ export default function Footer() {
             Quesillos Manuelita
           </h3>
           <p className="text-sm leading-relaxed mb-6 max-w-xs">
-            El sabor que une tradicion y frescura. Productos lacteos del Norte
-            Antioqueno para tu mesa.
+            El sabor que une tradición y frescura. Queso Mozzarella del norte
+            antioqueño para tu mesa.
           </p>
         </div>
 

@@ -10,8 +10,8 @@ export const slides = [
     type: "video",
     videoSrc: heroVideo, // usamos la importación real
     poster: posterHero,
-    title: "Del ordeño artesanal al queso perfecto",
-    text: "Un recorrido real por la creación del auténtico quesillo antioqueño.",
+    title: "Del arte del ordeño a la perfección del queso",
+    text: "Un recorrido real por la creación del auténtico tipo queso Mozzarella",
     alt: "Video del ordeño y proceso del quesillo",
   },
 ];
