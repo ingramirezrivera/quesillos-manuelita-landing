@@ -47,7 +47,7 @@ export default function Contact() {
               <h3 className="text-2xl font-bold mb-6">
                 Información de Contacto
               </h3>
-              <p className="text-slate-400 mb-8 leading-relaxed">
+              <p className="text-slate-300 mb-8 leading-relaxed">
                 Llena el formulario y nuestro equipo comercial se pondrá en
                 contacto contigo en menos de 24 horas.
               </p>
@@ -189,6 +189,8 @@ export default function Contact() {
                   <img
                     src={logo}
                     alt="Districatar Logo"
+                    width="420"
+                    height="120"
                     className="h-12 w-auto object-contain"
                   />
                 </div>
@@ -196,6 +198,8 @@ export default function Contact() {
                   <img
                     src={logoCheese}
                     alt="Distri Cheese Logo"
+                    width="420"
+                    height="120"
                     className="h-12 w-auto object-contain"
                   />
                 </div>
@@ -327,7 +331,7 @@ export default function Contact() {
 
               {/* 4. BOTÓN (Deshabilitado hasta verificar) */}
               <div className="col-span-1 md:col-span-2">
-                <label className="flex items-start gap-3 text-sm text-gray-600 leading-relaxed cursor-pointer">
+                <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
                   <input
                     type="checkbox"
                     checked={acceptDataPolicy}
@@ -338,7 +342,7 @@ export default function Contact() {
                     Autorizo el tratamiento de mis datos personales conforme a la{" "}
                     <Link
                       to="/politica-datos"
-                      className="text-primary font-semibold hover:underline"
+                      className="text-amber-700 font-semibold hover:text-amber-800 hover:underline"
                     >
                       Política de Tratamiento de Datos
                     </Link>{" "}

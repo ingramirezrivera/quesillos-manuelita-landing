@@ -38,6 +38,8 @@ export default function OrderPage() {
           <img
             src={logo}
             alt="Quesillos Manuelita"
+            width="512"
+            height="512"
             className="w-32 md:w-40 h-auto mx-auto mb-8 transition-transform hover:scale-105 rounded-2xl border-4 border-white shadow-lg"
           />
         </Link>
@@ -62,6 +64,8 @@ export default function OrderPage() {
               <img
                 src={dist.logoSrc}
                 alt={dist.name}
+                width="420"
+                height="180"
                 className="h-44 w-auto max-w-full mb-4 object-contain"
               />
             ) : (

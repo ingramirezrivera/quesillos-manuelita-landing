@@ -73,6 +73,7 @@ export default function WhatsAppFloat() {
           </div>
           <button
             onClick={closeChat}
+            aria-label="Cerrar chat de WhatsApp"
             className="hover:bg-white/20 rounded-full p-1 transition"
           >
             <svg

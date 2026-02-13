@@ -12,6 +12,8 @@ export default function Footer() {
           <img
             src={logo}
             alt="Logo Quesillos Manuelita"
+            width="512"
+            height="512"
             className="w-24 h-24 rounded-2xl mb-6 shadow-lg shadow-white/5"
           />
           <h3 className="text-white text-lg font-bold mb-2">
@@ -209,10 +211,10 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="mt-16 border-t border-slate-900 pt-8 text-center">
-        <p className="text-sm text-slate-600">
+      <div className="mt-16 border-t border-slate-800 pt-8 text-center">
+        <p className="text-sm text-slate-400">
           &copy; {new Date().getFullYear()}{" "}
-          <span className="text-slate-400 font-semibold">
+          <span className="text-slate-200 font-semibold">
             Quesillos Manuelita S.A.S.
           </span>{" "}
           Todos los derechos reservados.

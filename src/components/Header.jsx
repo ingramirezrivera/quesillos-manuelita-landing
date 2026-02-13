@@ -125,6 +125,8 @@ export default function Header() {
         <img
           src={logo}
           alt="Quesillos Manuelita"
+          width="512"
+          height="512"
           className="
             flex-shrink-0 rounded-xl drop-shadow-xl mr-3 z-50
             h-[84px] w-auto ml-4

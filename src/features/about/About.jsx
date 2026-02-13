@@ -281,9 +281,9 @@ export default function About() {
                     <div className="p-3 bg-primary/10 rounded-2xl group-hover:bg-primary/20 transition-colors shrink-0">
                       {getSectionIcon(section.id)}
                     </div>
-                    <h4 className="text-xl md:text-2xl font-bold text-slate-800 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl md:text-2xl font-bold text-slate-800 group-hover:text-primary transition-colors">
                       {section.title}
-                    </h4>
+                    </h3>
                   </div>
                   <p className="text-slate-600 leading-relaxed text-base mb-6">
                     {section.body}
