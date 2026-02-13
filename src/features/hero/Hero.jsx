@@ -1,14 +1,36 @@
-﻿import { useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { slides } from "./slides";
 
 export default function Hero() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const sectionRef = useRef(null);
 
   // Solo tenemos un slide, el del video.
   const videoSlide = slides[0];
 
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry?.isIntersecting) {
+          setShouldLoadVideo(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section
+      ref={sectionRef}
       id="hero"
       className="
         relative -mt-6 h-[85vh] md:h-[95vh] overflow-hidden
@@ -17,7 +39,7 @@ export default function Hero() {
     >
       {/* Fondo de video */}
       <div className="absolute inset-0">
-        {/* 1. Imagen de póster que se muestra siempre al inicio */}
+        {/* 1. Imagen de poster que se muestra siempre al inicio */}
         <img
           src={videoSlide.poster}
           alt={videoSlide.alt}
@@ -29,7 +51,9 @@ export default function Hero() {
           className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
             isVideoLoaded ? "opacity-100" : "opacity-0"
           }`}
-          src={videoSlide.videoSrc}
+          src={shouldLoadVideo ? videoSlide.videoSrc : undefined}
+          preload="none"
+          poster={videoSlide.poster}
           autoPlay
           // 3. Cuando puede empezar, se hace visible
           onCanPlay={() => setIsVideoLoaded(true)}

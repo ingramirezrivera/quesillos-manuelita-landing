@@ -5,7 +5,7 @@ import fondo from "../../assets/images/about/fondo-about.jpg";
 const FAQ_ITEMS = [
   {
     q: "1. ¿Qué es el queso tipo mozzarella?",
-    a: "Es un queso de pasta hilada, suave y elástico, ideal para gratinar, fundir y usar en pizzas, lasañas, sándwiches y preparaciones calientes.",
+    a: "Es un queso de pasta hilada, suave y elástico, ideal para gratinar, fundir y usar en perros calientes, hamburguesas, quesadillas, pizzas, lasañas, sándwiches y preparaciones calientes.",
   },
   {
     q: "2. ¿Cuál es la temperatura ideal de conservación?",
@@ -13,7 +13,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "3. ¿Se puede congelar la mozzarella?",
-    a: "Sí, se puede congelar bien empacada. Al descongelar puede cambiar levemente la textura, por eso se recomienda para uso caliente (fundidos/gratinados).",
+    a: "No, no se puede congelar bien empacada. Puede perder sus características organolépticas y textura. Es mejor consumirla fresca para disfrutar su sabor y calidad óptimos.",
   },
   {
     q: "4. ¿Cuánto tiempo dura en refrigeración una vez abierto?",
@@ -127,7 +127,9 @@ export default function FaqPage() {
               key={item.q}
               className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm"
             >
-              <h2 className="text-xl font-bold text-slate-900 mb-3">{item.q}</h2>
+              <h2 className="text-xl font-bold text-slate-900 mb-3">
+                {item.q}
+              </h2>
               <p className="text-slate-600 leading-relaxed">{item.a}</p>
             </article>
           ))}
@@ -150,5 +152,3 @@ export default function FaqPage() {
     </main>
   );
 }
-
-
