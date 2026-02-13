@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { products } from "./productsData";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
+import { trackOrderIntent } from "../../utils/tracking";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
@@ -408,6 +409,12 @@ export default function Products() {
                       to={`/pedir?producto=${encodeURIComponent(
                         selected.name,
                       )}`}
+                      onClick={() =>
+                        trackOrderIntent({
+                          productName: selected?.name || "",
+                          source: "products_modal",
+                        })
+                      }
                       className="pulse-cta w-full md:w-auto inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-primary text-black font-bold text-lg hover:bg-yellow-400 transition-colors"
                     >
                       <span>Hacer pedido</span>

@@ -2,12 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logos/logo.jpeg";
 
 // IDs de las secciones del sitio
-const SECTIONS = ["hero", "products", "about", "contact"];
+const SECTIONS = ["hero", "products", "about", "allies", "contact"];
+
+const LABEL_BY_ID = {
+  hero: "Inicio",
+  products: "Productos",
+  about: "Sobre nosotros",
+  allies: "Aliados",
+  contact: "Contacto",
+};
 
 export default function Header() {
   const [active, setActive] = useState("hero");
   const [isOpen, setIsOpen] = useState(false);
   const firstLinkRef = useRef(null);
+  const visibilityRef = useRef(
+    SECTIONS.reduce((acc, id) => ({ ...acc, [id]: 0 }), {}),
+  );
 
   // 🔹 Navegación con scroll suave + cerrar menú móvil
   const handleNavClick = (e, id) => {
@@ -22,12 +33,39 @@ export default function Header() {
 
   // 🔹 ScrollSpy: detecta qué sección está visible
   useEffect(() => {
-    const opts = { root: null, threshold: 0.6 };
+    const thresholds = Array.from({ length: 11 }, (_, i) => i / 10);
+    const opts = {
+      root: null,
+      threshold: thresholds,
+      rootMargin: "-20% 0px -45% 0px",
+    };
     const observer = new IntersectionObserver((entries) => {
+      let changed = false;
       entries.forEach((entry) => {
         const id = entry.target.id;
-        if (entry.isIntersecting) setActive(id);
+        if (!SECTIONS.includes(id)) return;
+        visibilityRef.current[id] = entry.isIntersecting
+          ? entry.intersectionRatio
+          : 0;
+        changed = true;
       });
+
+      if (!changed) return;
+
+      let nextActive = active;
+      let maxRatio = -1;
+
+      SECTIONS.forEach((id) => {
+        const ratio = visibilityRef.current[id] || 0;
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          nextActive = id;
+        }
+      });
+
+      if (nextActive !== active) {
+        setActive(nextActive);
+      }
     }, opts);
 
     SECTIONS.forEach((id) => {
@@ -36,7 +74,7 @@ export default function Header() {
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [active]);
 
   // 🔹 Bloquear scroll al abrir menú móvil
   useEffect(() => {
@@ -109,13 +147,7 @@ export default function Header() {
                   className={linkClass(id)}
                   onClick={(e) => handleNavClick(e, id)}
                 >
-                  {id === "hero"
-                    ? "Inicio"
-                    : id === "products"
-                      ? "Productos"
-                      : id === "about"
-                        ? "Sobre nosotros"
-                        : "Contacto"}
+                  {LABEL_BY_ID[id] || id}
                 </a>
               </li>
             ))}
@@ -189,13 +221,7 @@ export default function Header() {
                 className={linkClass(id)}
                 onClick={(e) => handleNavClick(e, id)}
               >
-                {id === "hero"
-                  ? "Inicio"
-                  : id === "products"
-                    ? "Productos"
-                    : id === "about"
-                      ? "Sobre nosotros"
-                      : "Contacto"}
+                {LABEL_BY_ID[id] || id}
               </a>
             </li>
           ))}

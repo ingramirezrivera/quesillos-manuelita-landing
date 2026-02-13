@@ -1,5 +1,6 @@
 import { useSearchParams, Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
+import { trackWhatsAppClick } from "../../utils/tracking";
 // 1. Importa los logos de los distribuidores
 import districatarLogo from "../../assets/images/distributors/districatar-logo.png";
 import distriCheeseLogo from "../../assets/images/distributors/distri-cheese-logo.jpeg";
@@ -18,7 +19,7 @@ const distributors = [
     id: "districheese",
     name: "Distri Cheese",
     area: "Oriente y Valle de San Nicolás",
-    phone: "573042091223", // Temporal, luego añadir el de Distri Cheese
+    phone: "573009891200",
     logoSrc: distriCheeseLogo, // 3. Asigna el logo importado
   },
 ];
@@ -61,7 +62,7 @@ export default function OrderPage() {
               <img
                 src={dist.logoSrc}
                 alt={dist.name}
-                className={`${dist.id === "districatar" ? "h-44" : "h-40"} w-auto max-w-full mb-4 object-contain`}
+                className="h-44 w-auto max-w-full mb-4 object-contain"
               />
             ) : (
               <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4 text-gray-400">
@@ -92,11 +93,19 @@ export default function OrderPage() {
               href={`https://wa.me/${
                 dist.phone
               }?text=${encodeURIComponent(whatsappMessage)}`}
+              onClick={() =>
+                trackWhatsAppClick({
+                  zone: dist.id === "districatar" ? "medellin" : "oriente",
+                  source: "order_page",
+                  phone: dist.phone,
+                  productName,
+                })
+              }
               target="_blank"
               rel="noopener noreferrer"
               className="mt-8 w-full inline-flex justify-center items-center gap-2 rounded-xl px-8 py-4 bg-green-500 text-white font-bold text-lg hover:bg-green-600 transition-all shadow-md"
             >
-              <span>Contactar por WhatsApp</span>
+              <span>{dist.id === "districatar" ? "Medellín" : "Oriente"}</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
