@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { products } from "./productsData";
+import { products } from "./productsData"; // Asegúrate de que esta ruta sea correcta
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logos/logo.jpeg";
+import logo from "../../assets/images/logos/logo.jpeg"; // Asegúrate de que esta ruta sea correcta
 
 export default function Products() {
   const [open, setOpen] = useState(false);
@@ -60,26 +60,26 @@ export default function Products() {
         {/* --- CONTENEDOR DE PRODUCTOS --- */}
         <div
           ref={productsRef}
-          // Se mantiene la estructura flex nativa.
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-scroll md:overflow-visible snap-x md:snap-mandatory hide-scrollbar px-6 md:px-0 pb-8"
+          // CORREGIDO: snap-mandatory asegura que la tarjeta se centre siempre
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8 w-full"
         >
           {products.map((product) => (
             <div
               key={product.id}
-              // CORRECCIÓN: Se eliminó 'shrink-0' para volver al comportamiento de tamaño original.
-              // Se mantiene 'min-w-[85%]' y 'touch-manipulation' para el scroll.
-              className="w-[85%] shrink-0 md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100"
+              // CORREGIDO: 'shrink-0' es vital para el scroll horizontal.
+              // 'w-[85%]' define el ancho fijo en móvil.
+              className="shrink-0 w-[85%] md:w-auto snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 group"
             >
               <div
                 onClick={() => handleOpen(product)}
-                className="block w-auto h-100 overflow-hidden group relative cursor-pointer select-none"
+                className="block w-auto h-100 overflow-hidden relative cursor-pointer select-none"
               >
                 <img
                   src={product.image}
                   alt={product.name}
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
-                  className="w-full h-full object-cover transition-transform duration-500 select-none"
+                  className="w-full h-full object-cover transition-transform duration-500 select-none md:group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/10 transition-colors duration-300" />
               </div>
@@ -150,7 +150,7 @@ export default function Products() {
         </div>
       </div>
 
-      {/* --- Modal Detallado (Sin Cambios) --- */}
+      {/* --- Modal Detallado --- */}
       {open && selected && (
         <>
           <div
