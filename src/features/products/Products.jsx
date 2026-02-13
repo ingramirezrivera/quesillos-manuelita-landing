@@ -10,7 +10,7 @@ export default function Products() {
 
   const productsRef = useRef(null);
   const touchStartRef = useRef({ x: 0, y: 0 });
-  const suppressNextImageClickRef = useRef(false);
+  const suppressNextCardClickRef = useRef(false);
 
   const handleOpen = (product) => {
     setSelected(product);
@@ -33,24 +33,24 @@ export default function Products() {
     }
   };
 
-  const handleImageTouchStart = (e) => {
+  const handleCardTouchStart = (e) => {
     const touch = e.touches?.[0];
     if (!touch) return;
     touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-    suppressNextImageClickRef.current = false;
+    suppressNextCardClickRef.current = false;
   };
 
-  const handleImageTouchMove = (e) => {
+  const handleCardTouchMove = (e) => {
     const touch = e.touches?.[0];
     if (!touch) return;
     const dx = Math.abs(touch.clientX - touchStartRef.current.x);
     const dy = Math.abs(touch.clientY - touchStartRef.current.y);
-    if (dx > 8 || dy > 8) suppressNextImageClickRef.current = true;
+    if (dx > 8 || dy > 8) suppressNextCardClickRef.current = true;
   };
 
-  const handleImageClick = (product) => {
-    if (suppressNextImageClickRef.current) {
-      suppressNextImageClickRef.current = false;
+  const handleCardClick = (product) => {
+    if (suppressNextCardClickRef.current) {
+      suppressNextCardClickRef.current = false;
       return;
     }
     handleOpen(product);
@@ -98,14 +98,14 @@ export default function Products() {
           {products.map((product) => (
             <div
               key={product.id}
+              onTouchStart={handleCardTouchStart}
+              onTouchMove={handleCardTouchMove}
               // CAMBIO 1: Agregué 'group' AQUÍ (en la tarjeta padre).
               // Ahora el hover se activa tocando CUALQUIER PARTE de la tarjeta.
               className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 group"
             >
               <div
-                onTouchStart={handleImageTouchStart}
-                onTouchMove={handleImageTouchMove}
-                onClick={() => handleImageClick(product)}
+                onClick={() => handleCardClick(product)}
                 // CAMBIO 2: Quité 'group' de aquí para evitar confusiones, ya que ahora lo maneja el padre.
                 className="block w-auto h-100 overflow-hidden relative cursor-pointer select-none"
               >
@@ -131,7 +131,7 @@ export default function Products() {
                 </div>
                 <button
                   type="button"
-                  onClick={() => handleOpen(product)}
+                  onClick={() => handleCardClick(product)}
                   className="mt-auto inline-block bg-primary text-black font-medium px-6 py-2 rounded-full hover:bg-yellow-500 transition-colors shadow-sm"
                 >
                   Ver detalles
