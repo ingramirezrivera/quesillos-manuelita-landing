@@ -1,9 +1,15 @@
 import { useEffect } from "react";
 
-const SITE_URL = (import.meta.env.VITE_SITE_URL || "https://quesillosmanuelita.com").replace(
-  /\/$/,
-  "",
-);
+function getSafeSiteUrl() {
+  const raw = import.meta.env.VITE_SITE_URL || "https://quesillosmanuelita.com";
+  try {
+    return new URL(raw).toString().replace(/\/$/, "");
+  } catch {
+    return "https://quesillosmanuelita.com";
+  }
+}
+
+const SITE_URL = getSafeSiteUrl();
 
 const BASE_PATH = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
 
