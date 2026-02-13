@@ -64,15 +64,6 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a
-                href="#allies"
-                className="hover:text-primary transition-colors flex items-center gap-2"
-              >
-                <span className="w-1.5 h-1.5 bg-slate-700 hover:bg-primary rounded-full transition-colors"></span>{" "}
-                Nuestros aliados
-              </a>
-            </li>
-            <li>
               <Link
                 to="/faq"
                 className="hover:text-primary transition-colors flex items-center gap-2"

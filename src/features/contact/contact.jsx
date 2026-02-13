@@ -206,6 +206,7 @@ export default function Contact() {
                   href="https://www.facebook.com/profile.php?id=100070905380130"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Facebook"
                   className="p-2 md:p-2.5 bg-white/10 rounded-full hover:bg-primary hover:text-white transition-colors text-white"
                 >
                   <svg
@@ -220,6 +221,7 @@ export default function Contact() {
                   href="https://www.instagram.com/quesillosmanuelita/"
                   target="_blank"
                   rel="noopener noreferrer"
+                  aria-label="Instagram"
                   className="p-2 md:p-2.5 bg-white/10 rounded-full hover:bg-primary hover:text-white transition-colors text-white"
                 >
                   <svg
@@ -242,10 +244,14 @@ export default function Contact() {
           <div className="lg:col-span-3 p-8 md:p-12">
             <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="contact-name"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Nombre completo
                 </label>
                 <input
+                  id="contact-name"
                   type="text"
                   name="name"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -254,10 +260,14 @@ export default function Contact() {
                 />
               </div>
               <div className="col-span-1">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="contact-phone"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Teléfono
                 </label>
                 <input
+                  id="contact-phone"
                   type="tel"
                   name="phone"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -265,10 +275,14 @@ export default function Contact() {
                 />
               </div>
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="contact-email"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   Correo electrónico
                 </label>
                 <input
+                  id="contact-email"
                   type="email"
                   name="email"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
@@ -277,10 +291,14 @@ export default function Contact() {
                 />
               </div>
               <div className="col-span-1 md:col-span-2">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label
+                  htmlFor="contact-message"
+                  className="block text-sm font-medium text-gray-700 mb-2"
+                >
                   ¿En qué podemos ayudarte?
                 </label>
                 <textarea
+                  id="contact-message"
                   name="message"
                   rows="4"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition resize-none"
@@ -349,6 +367,7 @@ export default function Contact() {
     </section>
   );
 }
+
 
 
 
