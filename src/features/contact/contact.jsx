@@ -1,6 +1,6 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import { useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha"; // 👈 1. Importamos la librería
+import ReCAPTCHA from "react-google-recaptcha"; // 1. Importamos la librería
 import logo from "../../assets/images/contact/districatar-logo.png";
 import logoCheese from "../../assets/images/distributors/distri-cheese-logo.jpeg";
 import { trackWhatsAppClick } from "../../utils/tracking";
@@ -349,6 +349,8 @@ export default function Contact() {
     </section>
   );
 }
+
+
 
 
 

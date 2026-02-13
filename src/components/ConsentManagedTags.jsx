@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 
 const STORAGE_KEY = "qm_cookie_consent_v1";
 
@@ -133,3 +133,4 @@ export default function ConsentManagedTags() {
 
   return null;
 }
+

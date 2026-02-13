@@ -1,4 +1,4 @@
-import React from "react";
+﻿import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
 import { trackWhatsAppClick } from "../../utils/tracking";
@@ -23,7 +23,7 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* COLUMNA 2: Navegacion Rapida */}
+        {/* COLUMNA 2: Navegación Rápida */}
         <div>
           <h3 className="text-white text-lg font-bold mb-6">Explora</h3>
           <ul className="space-y-4">
@@ -78,7 +78,7 @@ export default function Footer() {
                 className="hover:text-primary transition-colors flex items-center gap-2"
               >
                 <span className="w-1.5 h-1.5 bg-slate-700 hover:bg-primary rounded-full transition-colors"></span>{" "}
-                FAQ Manipulacion Mozzarella
+                FAQ Preguntas frecuentes
               </Link>
             </li>
           </ul>
@@ -94,7 +94,7 @@ export default function Footer() {
                 className="hover:text-primary transition-colors flex items-center gap-2"
               >
                 <span className="w-1.5 h-1.5 bg-slate-700 hover:bg-primary rounded-full transition-colors"></span>{" "}
-                Terminos y Condiciones
+                Términos y Condiciones
               </Link>
             </li>
             <li>
@@ -103,7 +103,7 @@ export default function Footer() {
                 className="hover:text-primary transition-colors flex items-center gap-2"
               >
                 <span className="w-1.5 h-1.5 bg-slate-700 hover:bg-primary rounded-full transition-colors"></span>{" "}
-                Politica de Tratamiento de Datos
+                Política de Tratamiento de Datos
               </Link>
             </li>
             <li>
@@ -112,7 +112,7 @@ export default function Footer() {
                 className="hover:text-primary transition-colors flex items-center gap-2"
               >
                 <span className="w-1.5 h-1.5 bg-slate-700 hover:bg-primary rounded-full transition-colors"></span>{" "}
-                Politica de Cookies
+                Política de Cookies
               </Link>
             </li>
             <li>
@@ -134,11 +134,11 @@ export default function Footer() {
         <div>
           <div className="mb-8">
             <h3 className="text-white text-xs font-bold uppercase tracking-widest mb-4 opacity-70">
-              Donde comprar
+              Dónde comprar
             </h3>
             <div className="grid gap-3">
               <a
-                href={`https://wa.me/573042091223?text=${encodeURIComponent("Hola, quiero informacion para Medellin y Area Metropolitana.")}`}
+                href={`https://wa.me/573042091223?text=${encodeURIComponent("Hola, quiero información para Medellín y Área Metropolitana.")}`}
                 onClick={() =>
                   trackWhatsAppClick({
                     zone: "medellin",
@@ -150,10 +150,10 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="bg-white/5 px-4 py-2 rounded-xl inline-flex items-center justify-center border border-white/10 text-sm font-semibold text-white hover:bg-primary hover:text-black hover:border-primary transition-colors"
               >
-                Medellin
+                Medellín
               </a>
               <a
-                href={`https://wa.me/573009891200?text=${encodeURIComponent("Hola, quiero informacion para Oriente y Valle de San Nicolas.")}`}
+                href={`https://wa.me/573009891200?text=${encodeURIComponent("Hola, quiero información para Oriente y Valle de San Nicolás.")}`}
                 onClick={() =>
                   trackWhatsAppClick({
                     zone: "oriente",
@@ -171,7 +171,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Siguenos</h3>
+            <h3 className="text-white text-lg font-bold mb-4">Síguenos</h3>
             <div className="flex gap-4">
               <a
                 href="https://www.facebook.com/profile.php?id=100070905380130"

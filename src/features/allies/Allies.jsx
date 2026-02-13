@@ -1,9 +1,9 @@
-const allies = [
+﻿const allies = [
   { id: "comfama", name: "Comfama", logo: "/allies/comfama.svg" },
   { id: "sura", name: "Grupo SURA", logo: "/allies/grupo-sura.svg" },
   {
     id: "ccm",
-    name: "Camara de Comercio de Medellin",
+    name: "Cámara de Comercio de Medellín",
     logo: "/allies/camara-comercio-medellin.svg",
   },
 ];
@@ -46,3 +46,4 @@ export default function Allies() {
     </section>
   );
 }
+

@@ -1,5 +1,5 @@
-// src/features/about/About.jsx
-import { useEffect, useRef, useState } from "react";
+﻿// src/features/about/About.jsx
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ABOUT_SECTIONS } from "./aboutData";
 import fondo from "../../assets/images/about/fondo-about.jpg";
 
@@ -17,9 +17,9 @@ export default function About() {
   const touchDeltaX = useRef(0);
   const isSwiping = useRef(false);
 
-  const goTo = (i) => setIdx((i + total) % total);
-  const next = () => setIdx((i) => (i + 1) % total);
-  const prev = () => setIdx((i) => (i - 1 + total) % total);
+  const goTo = useCallback((i) => setIdx((i + total) % total), [total]);
+  const next = useCallback(() => setIdx((i) => (i + 1) % total), [total]);
+  const prev = useCallback(() => setIdx((i) => (i - 1 + total) % total), [total]);
 
   // autoplay
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function About() {
       if (!pausedRef.current) next();
     }, 20000);
     return () => clearInterval(timerRef.current);
-  }, [total]);
+  }, [next]);
 
   // pausar cuando la pestaña no está visible
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function About() {
     };
     el.addEventListener("keydown", onKey);
     return () => el.removeEventListener("keydown", onKey);
-  }, []);
+  }, [next, prev]);
 
   // swipe móvil
   const SWIPE_THRESHOLD = 40;
@@ -112,7 +112,7 @@ export default function About() {
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          // 👇 Pausa/reanuda en desktop por hover
+          // Pausa/reanuda en desktop por hover
           onMouseEnter={() => {
             pausedRef.current = true;
           }}
@@ -230,3 +230,4 @@ function KPI({ number, label }) {
     </div>
   );
 }
+

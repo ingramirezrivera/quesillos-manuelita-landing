@@ -1,31 +1,31 @@
-// revisor.js
+﻿// revisor.js
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config({ path: ".env.local" }); // Asegúrate de tener dotenv instalado: npm install dotenv
+require("dotenv").config({ path: ".env.local" }); // AsegÃºrate de tener dotenv instalado: npm install dotenv
 
 const MODEL_NAME = "gemini-1.5-flash";
 
 /**
- * Construye el prompt para la revisión de código.
- * @param {string} codeContent - El contenido del código a revisar.
+ * Construye el prompt para la revisiÃ³n de cÃ³digo.
+ * @param {string} codeContent - El contenido del cÃ³digo a revisar.
  * @param {string} fileName - El nombre del archivo para dar contexto.
  * @returns {string} El prompt completo.
  */
 function buildPrompt(codeContent, fileName) {
   return `
-    Actúa como un Tech Lead Senior experto en desarrollo web, especialmente con React, Vite y JavaScript moderno.
-    Tu tarea es revisar el siguiente código del archivo "${fileName}".
+    ActÃºa como un Tech Lead Senior experto en desarrollo web, especialmente con React, Vite y JavaScript moderno.
+    Tu tarea es revisar el siguiente cÃ³digo del archivo "${fileName}".
 
     Quiero que te enfoques en los siguientes puntos:
-    1.  **Errores Potenciales:** Identifica bugs, lógica incorrecta o posibles problemas en tiempo de ejecución.
-    2.  **Optimización:** Sugiere mejoras de rendimiento, legibilidad y mantenibilidad.
-    3.  **Buenas Prácticas:** Asegúrate de que el código siga las convenciones y buenas prácticas actuales de React y JavaScript.
-    4.  **Refactorización:** Si encuentras código repetitivo o complejo, propón una refactorización clara con ejemplos.
+    1.  **Errores Potenciales:** Identifica bugs, lÃ³gica incorrecta o posibles problemas en tiempo de ejecuciÃ³n.
+    2.  **OptimizaciÃ³n:** Sugiere mejoras de rendimiento, legibilidad y mantenibilidad.
+    3.  **Buenas PrÃ¡cticas:** AsegÃºrate de que el cÃ³digo siga las convenciones y buenas prÃ¡cticas actuales de React y JavaScript.
+    4.  **RefactorizaciÃ³n:** Si encuentras cÃ³digo repetitivo o complejo, propÃ³n una refactorizaciÃ³n clara con ejemplos.
 
-    Sé claro, conciso y proporciona ejemplos de código cuando sea necesario.
+    SÃ© claro, conciso y proporciona ejemplos de cÃ³digo cuando sea necesario.
 
-    Aquí está el código:
+    AquÃ­ estÃ¡ el cÃ³digo:
     \`\`\`javascript
     ${codeContent}
     \`\`\`
@@ -33,13 +33,13 @@ function buildPrompt(codeContent, fileName) {
 }
 
 /**
- * Función principal que orquesta la revisión del código.
+ * FunciÃ³n principal que orquesta la revisiÃ³n del cÃ³digo.
  */
 async function reviewCode() {
   // 1. Validar la API Key
   if (!process.env.GOOGLE_API_KEY) {
     console.error(
-      "❌ Error: La variable de entorno GOOGLE_API_KEY no está definida."
+      "âŒ Error: La variable de entorno GOOGLE_API_KEY no estÃ¡ definida."
     );
     process.exit(1);
   }
@@ -48,7 +48,7 @@ async function reviewCode() {
   const filePath = process.argv[2];
   if (!filePath) {
     console.error(
-      "❌ Error: Debes proporcionar la ruta a un archivo. \nEjemplo: node revisor.js src/features/about/aboutData.js"
+      "âŒ Error: Debes proporcionar la ruta a un archivo. \nEjemplo: node revisor.js src/features/about/aboutData.js"
     );
     process.exit(1);
   }
@@ -57,9 +57,9 @@ async function reviewCode() {
   let codeContent;
   try {
     codeContent = fs.readFileSync(filePath, "utf-8");
-  } catch (error) {
+  } catch {
     console.error(
-      `❌ Error: No se pudo leer el archivo en la ruta: ${filePath}`
+      `âŒ Error: No se pudo leer el archivo en la ruta: ${filePath}`
     );
     process.exit(1);
   }
@@ -71,16 +71,16 @@ async function reviewCode() {
     const fileName = path.basename(filePath);
     const prompt = buildPrompt(codeContent, fileName);
 
-    console.log(`🤖 Analizando "${fileName}" con Gemini...`);
+    console.log(`ðŸ¤– Analizando "${fileName}" con Gemini...`);
 
     const result = await model.generateContent(prompt);
-    console.log("\n--- 📝 Reporte de Revisión ---\n");
+    console.log("\n--- ðŸ“ Reporte de RevisiÃ³n ---\n");
     console.log(result.response.text());
   } catch (error) {
-    console.error("\n❌ Error al conectar con la API de Gemini.");
+    console.error("\nâŒ Error al conectar con la API de Gemini.");
     if (error.message.includes("API key not valid")) {
       console.error(
-        "   Asegúrate de que tu GOOGLE_API_KEY sea correcta y esté bien configurada en tu archivo .env.local"
+        "   AsegÃºrate de que tu GOOGLE_API_KEY sea correcta y estÃ© bien configurada en tu archivo .env.local"
       );
     } else {
       console.error("   Detalles:", error.message);
@@ -89,3 +89,4 @@ async function reviewCode() {
 }
 
 reviewCode();
+

@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+﻿import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./features/hero/Hero";
 import Products from "./features/products/Products";
@@ -61,3 +61,4 @@ function App() {
 }
 
 export default App;
+

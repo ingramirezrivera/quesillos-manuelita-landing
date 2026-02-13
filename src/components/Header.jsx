@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logos/logo.jpeg";
 
 // IDs de las secciones del sitio
@@ -19,7 +19,7 @@ export default function Header() {
     SECTIONS.reduce((acc, id) => ({ ...acc, [id]: 0 }), {}),
   );
 
-  // 🔹 Navegación con scroll suave + cerrar menú móvil
+  // Navegación con scroll suave + cerrar menú móvil
   const handleNavClick = (e, id) => {
     e.preventDefault();
     const el = document.getElementById(id);
@@ -30,7 +30,7 @@ export default function Header() {
     }
   };
 
-  // 🔹 ScrollSpy: detecta qué sección está visible
+  // ScrollSpy: detecta qué sección está visible
   useEffect(() => {
     const thresholds = Array.from({ length: 11 }, (_, i) => i / 10);
     const opts = {
@@ -75,7 +75,7 @@ export default function Header() {
     return () => observer.disconnect();
   }, [active]);
 
-  // 🔹 Bloquear scroll al abrir menú móvil
+  // Bloquear scroll al abrir menú móvil
   useEffect(() => {
     if (isOpen) {
       document.body.classList.add("overflow-hidden");
@@ -86,7 +86,7 @@ export default function Header() {
     return () => document.body.classList.remove("overflow-hidden");
   }, [isOpen]);
 
-  // 🔹 Cierra menú en eventos específicos (resize, Escape, cambio de hash)
+  // Cierra menú en eventos específicos (resize, Escape, cambio de hash)
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 768) setIsOpen(false);
@@ -105,7 +105,7 @@ export default function Header() {
     };
   }, []);
 
-  // 🔹 Estilo base de los links
+  // Estilo base de los links
   const linkBase =
     "inline-block transform-gpu transition duration-200 hover:scale-110 focus:scale-110";
 
@@ -121,7 +121,7 @@ export default function Header() {
       "
     >
       <div className="relative flex items-center px-4 h-16 md:h-16 max-w-7xl mx-auto">
-        {/* 🔹 Logo */}
+        {/* Logo */}
         <img
           src={logo}
           alt="Quesillos Manuelita"
@@ -133,7 +133,7 @@ export default function Header() {
           "
         />
 
-        {/* 🔹 Navegación principal (desktop) */}
+        {/* Navegación principal (desktop) */}
         <nav
           className="ml-auto hidden md:block"
           aria-label="Navegación principal"
@@ -153,7 +153,7 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* 🔹 Botón hamburguesa (mobile) */}
+        {/* Botón hamburguesa (mobile) */}
         <button
           type="button"
           className="ml-auto inline-flex items-center justify-center md:hidden rounded-md p-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary"
@@ -185,7 +185,7 @@ export default function Header() {
         </button>
       </div>
 
-      {/* 🔹 Overlay (mobile) */}
+      {/* Overlay (mobile) */}
       {isOpen && (
         <button
           aria-label="Cerrar menú"
@@ -194,7 +194,7 @@ export default function Header() {
         />
       )}
 
-      {/* 🔹 Menú móvil */}
+      {/* Menú móvil */}
       <div
         id="mobile-menu"
         className={`
@@ -229,3 +229,5 @@ export default function Header() {
     </header>
   );
 }
+
+

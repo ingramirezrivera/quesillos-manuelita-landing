@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import { trackWhatsAppClick } from "../utils/tracking";
 
 export default function WhatsAppFloat() {
@@ -35,17 +35,17 @@ export default function WhatsAppFloat() {
   const whatsappOptions = [
     {
       id: "medellin",
-      label: "Medellin",
+      label: "Medellín",
       phone: "573042091223",
       message:
-        "Hola, estoy interesado en los productos de Quesillos Manuelita para Medellin y Area Metropolitana.",
+        "Hola, estoy interesado en los productos de Quesillos Manuelita para Medellín y Área Metropolitana.",
     },
     {
       id: "oriente",
       label: "Oriente",
       phone: "573009891200",
       message:
-        "Hola, estoy interesado en los productos de Quesillos Manuelita para Oriente y Valle de San Nicolas.",
+        "Hola, estoy interesado en los productos de Quesillos Manuelita para Oriente y Valle de San Nicolás.",
     },
   ];
 
@@ -167,3 +167,4 @@ export default function WhatsAppFloat() {
     </div>
   );
 }
+

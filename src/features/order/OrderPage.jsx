@@ -1,4 +1,4 @@
-import { useSearchParams, Link } from "react-router-dom";
+﻿import { useSearchParams, Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
 import { trackWhatsAppClick } from "../../utils/tracking";
 // 1. Importa los logos de los distribuidores
@@ -128,5 +128,7 @@ export default function OrderPage() {
     </div>
   );
 }
+
+
 
 

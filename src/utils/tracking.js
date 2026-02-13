@@ -1,4 +1,4 @@
-function getSafeWindow() {
+﻿function getSafeWindow() {
   if (typeof window === "undefined") return null;
   return window;
 }
@@ -57,3 +57,4 @@ export function trackWhatsAppClick({
     });
   }
 }
+

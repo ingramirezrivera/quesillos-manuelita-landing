@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+﻿import { useEffect, useMemo, useRef, useState } from "react";
 
 const STORAGE_KEY = "qm_cookie_consent_v1";
 
@@ -259,3 +259,4 @@ export default function CookieConsent() {
     </>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { slides } from "./slides";
 
 export default function Hero() {
@@ -86,3 +86,4 @@ function SlideItem({ slide, isActive }) {
     </div>
   );
 }
+

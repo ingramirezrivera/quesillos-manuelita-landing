@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+﻿import { Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
 import fondo from "../../assets/images/about/fondo-about.jpg";
 
@@ -133,3 +133,5 @@ export default function TermsPage() {
     </main>
   );
 }
+
+

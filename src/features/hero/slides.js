@@ -1,4 +1,4 @@
-// src/features/hero/slides.js
+﻿// src/features/hero/slides.js
 
 // Importación del video (CORRECTA según tu carpeta)
 import heroVideo from "../../assets/videos/hero-intro.mp4";
@@ -15,3 +15,4 @@ export const slides = [
     alt: "Video del ordeño y proceso del quesillo",
   },
 ];
+

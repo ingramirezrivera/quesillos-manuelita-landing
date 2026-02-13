@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { products } from "./productsData";
 import { Link } from "react-router-dom";
 import logo from "../../assets/images/logos/logo.jpeg";
@@ -551,3 +551,5 @@ function ModalImages({ selected }) {
     </div>
   );
 }
+
+

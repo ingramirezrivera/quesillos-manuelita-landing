@@ -1,7 +1,7 @@
-{
+﻿{
   "name": "Quesillos Manuelita",
   "short_name": "Manuelita",
-  "description": "Quesos y lacteos artesanales para Medellin y Oriente Antioqueno.",
+  "description": "Quesos y lácteos artesanales para Medellín y Oriente Antioqueño.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
@@ -22,3 +22,5 @@
     }
   ]
 }
+
+

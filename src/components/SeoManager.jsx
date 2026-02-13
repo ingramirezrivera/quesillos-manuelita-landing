@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 
 function getSafeSiteUrl() {
   const raw = import.meta.env.VITE_SITE_URL || "https://quesillosmanuelita.com";
@@ -22,27 +22,27 @@ const SEO_BY_PATH = {
   "/pedir": {
     title: "Pedir por WhatsApp | Quesillos Manuelita",
     description:
-      "Selecciona tu distribuidor para pedir por WhatsApp en Medellin y Oriente. Atencion rapida para pedidos comerciales.",
+      "Selecciona tu distribuidor para pedir por WhatsApp en Medellín y Oriente. Atención rápida para pedidos comerciales.",
   },
   "/terminos": {
-    title: "Terminos y Condiciones | Quesillos Manuelita",
+    title: "Términos y Condiciones | Quesillos Manuelita",
     description:
-      "Consulta los terminos y condiciones de uso del sitio web y de atencion comercial de Quesillos Manuelita S.A.S.",
+      "Consulta los términos y condiciones de uso del sitio web y de atención comercial de Quesillos Manuelita S.A.S.",
   },
   "/politica-datos": {
-    title: "Politica de Tratamiento de Datos | Quesillos Manuelita",
+    title: "Política de Tratamiento de Datos | Quesillos Manuelita",
     description:
-      "Conoce como Quesillos Manuelita S.A.S. recolecta, usa y protege datos personales conforme a la normativa colombiana.",
+      "Conoce cómo Quesillos Manuelita S.A.S. recolecta, usa y protege datos personales conforme a la normativa colombiana.",
   },
   "/politica-cookies": {
-    title: "Politica de Cookies | Quesillos Manuelita",
+    title: "Política de Cookies | Quesillos Manuelita",
     description:
-      "Informacion sobre cookies esenciales, analitica y marketing usadas por Quesillos Manuelita para mejorar la experiencia y medir campanas.",
+      "Información sobre cookies esenciales, analítica y marketing usadas por Quesillos Manuelita para mejorar la experiencia y medir campañas.",
   },
   "/faq": {
     title: "FAQ Mozzarella | Quesillos Manuelita",
     description:
-      "Preguntas frecuentes sobre queso tipo mozzarella: conservacion, cadena de frio, manipulacion higienica, rendimiento y uso en cocina.",
+      "Preguntas frecuentes sobre queso tipo mozzarella: conservación, cadena de frío, manipulación higiénica, rendimiento y uso en cocina.",
   },
 };
 
@@ -139,3 +139,5 @@ export default function SeoManager({ pathname }) {
 
   return null;
 }
+
+

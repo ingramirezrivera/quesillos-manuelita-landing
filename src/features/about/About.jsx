@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+﻿import { useEffect, useRef, useState } from "react";
 import { ABOUT_SECTIONS } from "./aboutData";
 import fondo from "../../assets/images/about/fondo-about.jpg";
 
@@ -420,3 +420,4 @@ function KPI({ number, label, icon }) {
     </div>
   );
 }
+

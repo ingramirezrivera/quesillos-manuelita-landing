@@ -1,4 +1,4 @@
-import mozarella from "../../assets/images/products/queso-mozarella.jpg";
+﻿import mozarella from "../../assets/images/products/queso-mozarella.jpg";
 import mozarellaAlt from "../../assets/images/products/queso-mozarella-alt.jpg";
 import pizza from "../../assets/images/products/queso-mozarella-pizza.jpg";
 import pizzaAlt from "../../assets/images/products/queso-mozarella-pizza-alt.jpg";
@@ -67,3 +67,4 @@ export const products = [
     ],
   },
 ];
+

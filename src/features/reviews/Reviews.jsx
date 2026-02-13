@@ -1,13 +1,13 @@
-const comments = [
+﻿const comments = [
   {
     id: 1,
     name: "Pizzeria Don Carlo",
     handle: "@doncarlopizza",
     platform: "Instagram",
-    text: "El Bano Maria nos funciona excelente en servicio. Mantiene el queso en punto y mejora la velocidad en horas pico.",
-    product: "Bano Maria",
+    text: "El Baño María nos funciona excelente en servicio. Mantiene el queso en punto y mejora la velocidad en horas pico.",
+    product: "Baño María",
     likes: 128,
-    time: "Hace 2 dias",
+    time: "Hace 2 días",
   },
   {
     id: 2,
@@ -17,7 +17,7 @@ const comments = [
     text: "El tipo cheddar para hamburguesas funde parejo y da un sabor brutal. Nuestros clientes lo piden siempre.",
     product: "Tipo cheddar para hamburguesas",
     likes: 97,
-    time: "Hace 4 dias",
+    time: "Hace 4 días",
   },
   {
     id: 3,
@@ -34,7 +34,7 @@ const comments = [
     name: "Casa Tabla Gourmet",
     handle: "@casatablagourmet",
     platform: "Facebook",
-    text: "Los quesos especiales para tablas tienen gran presentacion y muy buen balance de sabor para eventos.",
+    text: "Los quesos especiales para tablas tienen gran presentación y muy buen balance de sabor para eventos.",
     product: "Quesos especiales para tablas",
     likes: 86,
     time: "Hace 1 semana",
@@ -45,7 +45,7 @@ const comments = [
     handle: "@laesquinadelsabor",
     platform: "Instagram",
     text: "Nos cambiamos a Quesillos Manuelita y mejoramos rendimiento en cocina. Producto estable y muy buen soporte comercial.",
-    product: "Linea mozzarella",
+    product: "Línea mozzarella",
     likes: 112,
     time: "Hace 2 semanas",
   },
@@ -70,7 +70,7 @@ export default function Reviews() {
             Lo que dicen en redes
           </h2>
           <p className="text-slate-600 max-w-3xl mx-auto text-lg">
-            Comentarios de clientes sobre Bano Maria, especial pizza, tipo
+            Comentarios de clientes sobre Baño María, especial pizza, tipo
             cheddar para hamburguesas y quesos especiales para tablas.
           </p>
         </div>
@@ -119,3 +119,5 @@ export default function Reviews() {
     </section>
   );
 }
+
+
