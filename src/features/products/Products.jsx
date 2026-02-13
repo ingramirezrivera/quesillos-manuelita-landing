@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { products } from "./productsData"; // Asegúrate de que esta ruta sea correcta
+import { products } from "./productsData";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logos/logo.jpeg"; // Asegúrate de que esta ruta sea correcta
+import logo from "../../assets/images/logos/logo.jpeg";
 
 export default function Products() {
   const [open, setOpen] = useState(false);
@@ -9,6 +9,8 @@ export default function Products() {
   const dialogRef = useRef(null);
 
   const productsRef = useRef(null);
+  const touchStartRef = useRef({ x: 0, y: 0 });
+  const suppressNextImageClickRef = useRef(false);
 
   const handleOpen = (product) => {
     setSelected(product);
@@ -23,9 +25,35 @@ export default function Products() {
   const scroll = (direction) => {
     if (productsRef.current) {
       const { current } = productsRef;
-      const scrollAmount = direction === "left" ? -300 : 300;
+      const cardWidth = current.firstElementChild?.clientWidth || 300;
+      const gap = 24;
+      const step = cardWidth + gap;
+      const scrollAmount = direction === "left" ? -step : step;
       current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
+
+  const handleImageTouchStart = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+    suppressNextImageClickRef.current = false;
+  };
+
+  const handleImageTouchMove = (e) => {
+    const touch = e.touches?.[0];
+    if (!touch) return;
+    const dx = Math.abs(touch.clientX - touchStartRef.current.x);
+    const dy = Math.abs(touch.clientY - touchStartRef.current.y);
+    if (dx > 8 || dy > 8) suppressNextImageClickRef.current = true;
+  };
+
+  const handleImageClick = (product) => {
+    if (suppressNextImageClickRef.current) {
+      suppressNextImageClickRef.current = false;
+      return;
+    }
+    handleOpen(product);
   };
 
   useEffect(() => {
@@ -60,18 +88,25 @@ export default function Products() {
         {/* --- CONTENEDOR DE PRODUCTOS --- */}
         <div
           ref={productsRef}
-          // CORREGIDO: snap-mandatory asegura que la tarjeta se centre siempre
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar px-6 md:px-0 pb-8 w-full"
+          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-proximity hide-scrollbar px-6 md:px-0 pb-8 w-full"
+          style={{
+            WebkitOverflowScrolling: "touch",
+            touchAction: "pan-x pan-y",
+            overscrollBehaviorX: "contain",
+          }}
         >
           {products.map((product) => (
             <div
               key={product.id}
-              // CORREGIDO: 'shrink-0' es vital para el scroll horizontal.
-              // 'w-[85%]' define el ancho fijo en móvil.
-              className="shrink-0 w-[85%] md:w-auto snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 group"
+              // CAMBIO 1: Agregué 'group' AQUÍ (en la tarjeta padre).
+              // Ahora el hover se activa tocando CUALQUIER PARTE de la tarjeta.
+              className="min-w-[85%] md:min-w-0 snap-center flex flex-col bg-white rounded-xl overflow-hidden shadow-lg md:hover:shadow-2xl transition-all duration-300 transform md:hover:-translate-y-1 border border-gray-100 group"
             >
               <div
-                onClick={() => handleOpen(product)}
+                onTouchStart={handleImageTouchStart}
+                onTouchMove={handleImageTouchMove}
+                onClick={() => handleImageClick(product)}
+                // CAMBIO 2: Quité 'group' de aquí para evitar confusiones, ya que ahora lo maneja el padre.
                 className="block w-auto h-100 overflow-hidden relative cursor-pointer select-none"
               >
                 <img
@@ -79,12 +114,13 @@ export default function Products() {
                   alt={product.name}
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
+                  // El scale-110 reacciona al 'group' del padre (la tarjeta completa)
                   className="w-full h-full object-cover transition-transform duration-500 select-none md:group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/10 transition-colors duration-300" />
               </div>
 
-              <div className="p-5 flex flex-col items-center flex-grow">
+              <div className="p-5 flex flex-col items-center flex-grow select-none">
                 <div className="mb-4 w-full">
                   <h3 className="text-xl font-bold text-gray-800 h-auto md:h-14 flex items-center justify-center">
                     {product.name}
@@ -150,7 +186,7 @@ export default function Products() {
         </div>
       </div>
 
-      {/* --- Modal Detallado --- */}
+      {/* --- Modal Detallado (Sin Cambios) --- */}
       {open && selected && (
         <>
           <div
