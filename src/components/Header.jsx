@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import logo from "../assets/images/logos/logo.jpeg";
 
 // IDs de las secciones del sitio
-const SECTIONS = ["hero", "products", "about", "allies", "contact"];
+const SECTIONS = ["hero", "products", "about", "contact"];
 
 const LABEL_BY_ID = {
   hero: "Inicio",
   products: "Productos",
   about: "Sobre nosotros",
-  allies: "Aliados",
   contact: "Contacto",
 };
 
