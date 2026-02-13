@@ -70,7 +70,7 @@ export default function Products() {
   }, [open]);
 
   return (
-    <section id="products" className="py-16 bg-white relative">
+    <section id="products" className="py-16 bg-white relative z-20">
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -88,7 +88,7 @@ export default function Products() {
         {/* --- CONTENEDOR DE PRODUCTOS --- */}
         <div
           ref={productsRef}
-          className="flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-proximity hide-scrollbar px-6 md:px-0 pb-8 w-full"
+          className="relative z-[70] flex md:grid md:grid-cols-4 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-proximity hide-scrollbar px-6 md:px-0 pb-8 w-full"
           style={{
             WebkitOverflowScrolling: "touch",
             touchAction: "pan-x pan-y",
@@ -117,10 +117,14 @@ export default function Products() {
                   // El scale-110 reacciona al 'group' del padre (la tarjeta completa)
                   className="w-full h-full object-cover transition-transform duration-500 select-none md:group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/10 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-black/0 md:group-hover:bg-black/10 transition-colors duration-300 pointer-events-none" />
               </div>
 
-              <div className="p-5 flex flex-col items-center flex-grow select-none">
+              <div
+                onTouchStart={handleCardTouchStart}
+                onTouchMove={handleCardTouchMove}
+                className="p-5 flex flex-col items-center flex-grow select-none"
+              >
                 <div className="mb-4 w-full">
                   <h3 className="text-xl font-bold text-gray-800 h-auto md:h-14 flex items-center justify-center">
                     {product.name}
@@ -131,6 +135,8 @@ export default function Products() {
                 </div>
                 <button
                   type="button"
+                  onTouchStart={handleCardTouchStart}
+                  onTouchMove={handleCardTouchMove}
                   onClick={() => handleCardClick(product)}
                   className="mt-auto inline-block bg-primary text-black font-medium px-6 py-2 rounded-full hover:bg-yellow-500 transition-colors shadow-sm"
                 >
@@ -142,7 +148,7 @@ export default function Products() {
         </div>
 
         {/* --- BOTONES DE CONTROL PARA MÓVIL --- */}
-        <div className="flex justify-center gap-4 md:hidden px-6 mt-2">
+        <div className="relative z-[80] flex justify-center gap-4 md:hidden px-6 mt-2">
           <button
             onClick={() => scroll("left")}
             aria-label="Anterior"

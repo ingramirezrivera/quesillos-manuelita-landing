@@ -26,12 +26,12 @@ export default function WhatsAppFloat() {
     "Hola, estoy interesado en los productos de Quesillos Manuelita.";
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4">
+    <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-4 pointer-events-none">
       {/* --- TARJETA DE CHAT (Se muestra solo si isOpen es true) --- */}
       <div
         className={`w-72 bg-[#e5ddd5] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 origin-bottom-right transform ${
           isOpen
-            ? "scale-100 opacity-100 translate-y-0"
+            ? "scale-100 opacity-100 translate-y-0 pointer-events-auto"
             : "scale-0 opacity-0 translate-y-10 pointer-events-none"
         }`}
       >
@@ -116,7 +116,7 @@ export default function WhatsAppFloat() {
         onClick={toggleChat}
         className={`${
           isOpen ? "hidden" : "flex"
-        } items-center justify-center w-16 h-16 bg-[#25D366] rounded-full shadow-lg hover:scale-110 hover:shadow-green-500/50 transition-all duration-300 z-50`}
+        } items-center justify-center w-16 h-16 bg-[#25D366] rounded-full shadow-lg hover:scale-110 hover:shadow-green-500/50 transition-all duration-300 z-50 pointer-events-auto`}
         aria-label="Abrir WhatsApp"
       >
         <svg
