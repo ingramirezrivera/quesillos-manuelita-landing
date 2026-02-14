@@ -8,8 +8,8 @@ export const slides = [
     type: "video",
     videoSrc: "/videos/hero-intro.optimized.mp4",
     videoSources: [
-      { src: "/videos/hero-intro.optimized.webm", type: "video/webm" },
       { src: "/videos/hero-intro.optimized.mp4", type: "video/mp4" },
+      { src: "/videos/hero-intro.optimized.webm", type: "video/webm" },
     ],
     poster: posterHero,
     title: "Del arte del ordeño a la perfección del queso",
