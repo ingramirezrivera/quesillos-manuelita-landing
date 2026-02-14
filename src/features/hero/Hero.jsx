@@ -3,7 +3,7 @@ import { slides } from "./slides";
 
 export default function Hero() {
   const [isPosterLoaded, setIsPosterLoaded] = useState(false);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [videoErrored, setVideoErrored] = useState(false);
@@ -36,14 +36,8 @@ export default function Hero() {
       (entries) => {
         const [entry] = entries;
         if (!entry?.isIntersecting) return;
-
-        // Espera un poco para priorizar LCP antes de descargar el video.
-        const timer = window.setTimeout(() => {
-          setShouldLoadVideo(true);
-        }, 1200);
-
+        setShouldLoadVideo(true);
         observer.disconnect();
-        return () => window.clearTimeout(timer);
       },
       { threshold: 0.2 },
     );
@@ -57,7 +51,7 @@ export default function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
-    setIsVideoLoaded(false);
+    setIsVideoPlaying(false);
     setVideoErrored(false);
     video.load();
     const playPromise = video.play();
@@ -103,19 +97,19 @@ export default function Hero() {
             ref={videoRef}
             key={videoSlide.videoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
-              isVideoLoaded ? "opacity-100" : "opacity-0"
+              isVideoPlaying ? "opacity-100" : "opacity-0"
             }`}
             preload="metadata"
             poster={videoSlide.poster}
             autoPlay
             // Evita mostrar capa negra: solo hacemos fade-in cuando ya esta reproduciendo.
-            onPlaying={() => setIsVideoLoaded(true)}
-            onWaiting={() => setIsVideoLoaded(false)}
-            onStalled={() => setIsVideoLoaded(false)}
-            onSuspend={() => setIsVideoLoaded(false)}
+            onPlaying={() => setIsVideoPlaying(true)}
+            onWaiting={() => setIsVideoPlaying(false)}
+            onStalled={() => setIsVideoPlaying(false)}
+            onSuspend={() => setIsVideoPlaying(false)}
             onError={() => {
               setVideoErrored(true);
-              setIsVideoLoaded(false);
+              setIsVideoPlaying(false);
             }}
             muted
             loop
@@ -135,7 +129,7 @@ export default function Hero() {
               if (!video) return;
               setAutoplayBlocked(false);
               video.muted = true;
-              video.play().then(() => setIsVideoLoaded(true)).catch(() => {});
+              video.play().then(() => setIsVideoPlaying(true)).catch(() => {});
             }}
             className="absolute inset-0 z-20 flex items-center justify-center bg-black/25 text-white"
             aria-label="Reproducir video del hero"

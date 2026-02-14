@@ -7,10 +7,7 @@ export const slides = [
     id: "hero-video-01",
     type: "video",
     videoSrc: "/videos/hero-intro.optimized.mp4",
-    videoSources: [
-      { src: "/videos/hero-intro.optimized.mp4", type: "video/mp4" },
-      { src: "/videos/hero-intro.optimized.webm", type: "video/webm" },
-    ],
+    videoSources: [{ src: "/videos/hero-intro.optimized.mp4", type: "video/mp4" }],
     poster: posterHero,
     title: "Del arte del ordeño a la perfección del queso",
     text: "Un recorrido real por la creación del auténtico tipo queso Mozzarella",
