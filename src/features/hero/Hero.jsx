@@ -6,6 +6,7 @@ export default function Hero() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [videoErrored, setVideoErrored] = useState(false);
   const sectionRef = useRef(null);
   const posterRef = useRef(null);
   const videoRef = useRef(null);
@@ -56,6 +57,9 @@ export default function Hero() {
     const video = videoRef.current;
     if (!video) return;
 
+    setIsVideoLoaded(false);
+    setVideoErrored(false);
+    video.load();
     const playPromise = video.play();
     if (playPromise?.catch) {
       playPromise.catch(() => {
@@ -94,19 +98,25 @@ export default function Hero() {
         />
 
         {/* 2. El video esta encima pero es invisible hasta que carga */}
-        {shouldLoadVideo && (
+        {shouldLoadVideo && !videoErrored && (
           <video
             ref={videoRef}
             key={videoSlide.videoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
               isVideoLoaded ? "opacity-100" : "opacity-0"
             }`}
-            preload="none"
+            preload="metadata"
             poster={videoSlide.poster}
             autoPlay
-            // 3. Cuando puede empezar, se hace visible
-            onLoadedData={() => setIsVideoLoaded(true)}
-            onCanPlay={() => setIsVideoLoaded(true)}
+            // Evita mostrar capa negra: solo hacemos fade-in cuando ya esta reproduciendo.
+            onPlaying={() => setIsVideoLoaded(true)}
+            onWaiting={() => setIsVideoLoaded(false)}
+            onStalled={() => setIsVideoLoaded(false)}
+            onSuspend={() => setIsVideoLoaded(false)}
+            onError={() => {
+              setVideoErrored(true);
+              setIsVideoLoaded(false);
+            }}
             muted
             loop
             playsInline
