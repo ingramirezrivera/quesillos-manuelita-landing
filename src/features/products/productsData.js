@@ -6,6 +6,7 @@ import cheddar from "../../assets/images/products/queso-cheddar.jpg";
 import cheddarAlt from "../../assets/images/products/queso-cheddar-alt.jpg";
 import especial from "../../assets/images/products/queso-especial.jpg";
 import especialAlt from "../../assets/images/products/queso-especial-alt.jpeg";
+import videoBanoMaria from "../../assets/videos/video-bano-maria.mp4";
 
 export const products = [
   {
@@ -13,10 +14,9 @@ export const products = [
     name: "Queso Mozzarella Baño Maria",
     description:
       "Fondo elástico y sabor lácteo, diseñado para no cortarse ni quemarse.",
-    videoSrc: "/videos/video-bano-maria.optimized.mp4",
+    videoSrc: videoBanoMaria,
     videoSources: [
-      { src: "/videos/video-bano-maria.optimized.webm", type: "video/webm" },
-      { src: "/videos/video-bano-maria.optimized.mp4", type: "video/mp4" },
+      { src: videoBanoMaria, type: "video/mp4" },
     ],
     image: mozarella,
     imageAlt: mozarellaAlt,
