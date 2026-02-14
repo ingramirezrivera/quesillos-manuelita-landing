@@ -1,25 +1,14 @@
 ﻿import { useEffect, useRef, useState } from "react";
 import { slides } from "./slides";
 
-function canLoadHeroVideo() {
-  if (typeof window === "undefined") return false;
-
-  const prefersReducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)",
-  ).matches;
-  const connection =
-    navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  const saveData = Boolean(connection?.saveData);
-
-  return !prefersReducedMotion && !saveData;
-}
-
 export default function Hero() {
   const [isPosterLoaded, setIsPosterLoaded] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const sectionRef = useRef(null);
   const posterRef = useRef(null);
+  const videoRef = useRef(null);
 
   // Solo tenemos un slide, el del video.
   const videoSlide = slides[0];
@@ -38,7 +27,6 @@ export default function Hero() {
 
   useEffect(() => {
     if (!isPosterLoaded) return;
-    if (!canLoadHeroVideo()) return;
 
     const node = sectionRef.current;
     if (!node) return;
@@ -62,6 +50,19 @@ export default function Hero() {
     observer.observe(node);
     return () => observer.disconnect();
   }, [isPosterLoaded]);
+
+  useEffect(() => {
+    if (!shouldLoadVideo) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    const playPromise = video.play();
+    if (playPromise?.catch) {
+      playPromise.catch(() => {
+        setAutoplayBlocked(true);
+      });
+    }
+  }, [shouldLoadVideo]);
 
   useEffect(() => {
     // Si la imagen venia cacheada, marcamos el estado inmediatamente.
@@ -95,20 +96,44 @@ export default function Hero() {
         {/* 2. El video esta encima pero es invisible hasta que carga */}
         {shouldLoadVideo && (
           <video
+            ref={videoRef}
             key={videoSlide.videoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${
               isVideoLoaded ? "opacity-100" : "opacity-0"
             }`}
-            src={videoSlide.videoSrc}
             preload="none"
             poster={videoSlide.poster}
             autoPlay
             // 3. Cuando puede empezar, se hace visible
+            onLoadedData={() => setIsVideoLoaded(true)}
             onCanPlay={() => setIsVideoLoaded(true)}
             muted
             loop
             playsInline
-          />
+          >
+            {(videoSlide.videoSources || []).map((source) => (
+              <source key={source.src} src={source.src} type={source.type} />
+            ))}
+          </video>
+        )}
+
+        {autoplayBlocked && (
+          <button
+            type="button"
+            onClick={() => {
+              const video = videoRef.current;
+              if (!video) return;
+              setAutoplayBlocked(false);
+              video.muted = true;
+              video.play().then(() => setIsVideoLoaded(true)).catch(() => {});
+            }}
+            className="absolute inset-0 z-20 flex items-center justify-center bg-black/25 text-white"
+            aria-label="Reproducir video del hero"
+          >
+            <span className="rounded-full bg-white/90 px-5 py-3 text-black font-semibold">
+              Reproducir video
+            </span>
+          </button>
         )}
       </div>
 

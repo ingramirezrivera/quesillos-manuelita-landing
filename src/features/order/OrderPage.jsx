@@ -40,6 +40,7 @@ export default function OrderPage() {
             alt="Quesillos Manuelita"
             width="512"
             height="512"
+            decoding="async"
             className="w-32 md:w-40 h-auto mx-auto mb-8 transition-transform hover:scale-105 rounded-2xl border-4 border-white shadow-lg"
           />
         </Link>
@@ -66,6 +67,8 @@ export default function OrderPage() {
                 alt={dist.name}
                 width="420"
                 height="180"
+                loading="lazy"
+                decoding="async"
                 className="h-44 w-auto max-w-full mb-4 object-contain"
               />
             ) : (

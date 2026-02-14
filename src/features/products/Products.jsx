@@ -255,6 +255,8 @@ export default function Products() {
                 <img
                   src={product.image}
                   alt={product.name}
+                  loading="lazy"
+                  decoding="async"
                   draggable={false}
                   onDragStart={(e) => e.preventDefault()}
                   // El scale-110 reacciona al 'group' del padre (la tarjeta completa)
@@ -388,11 +390,15 @@ export default function Products() {
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
+                loading="lazy"
+                decoding="async"
                 className="hidden md:block absolute -left-6 -top-12 h-24 w-auto rounded-xl shadow-lg z-50 border-2 border-white"
               />
               <img
                 src={logo}
                 alt="Quesillos Manuelita"
+                loading="lazy"
+                decoding="async"
                 className="md:hidden absolute left-4 -top-12 h-20 w-auto rounded-lg shadow-lg z-50 border-2 border-white"
               />
               <div className="grid grid-cols-1 md:grid-cols-2 max-h-[85vh] overflow-y-auto rounded-2xl">
@@ -461,14 +467,21 @@ function ModalImages({ selected }) {
   const [showAltImage, setShowAltImage] = useState(false);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const videoRef = useRef(null);
 
   const hasVideo = Boolean(selected.videoSrc);
+  const videoSources =
+    selected.videoSources && selected.videoSources.length
+      ? selected.videoSources
+      : [{ src: selected.videoSrc, type: "video/mp4" }];
   const canToggleImages = Boolean(selected.imageAlt);
 
   useEffect(() => {
     setHasPlayedOnce(false);
     setIsPlayingVideo(false);
     setShowAltImage(false);
+    setAutoplayBlocked(false);
   }, [selected.id]);
 
   useEffect(() => {
@@ -486,6 +499,7 @@ function ModalImages({ selected }) {
   const handlePlayVideo = (e) => {
     e.stopPropagation();
     if (hasVideo) {
+      setAutoplayBlocked(false);
       setIsPlayingVideo(true);
     }
   };
@@ -495,6 +509,20 @@ function ModalImages({ selected }) {
     setHasPlayedOnce(true);
   };
 
+  useEffect(() => {
+    if (!hasVideo || !isPlayingVideo) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    const playPromise = video.play();
+    if (playPromise?.catch) {
+      playPromise.catch(() => {
+        setIsPlayingVideo(false);
+        setAutoplayBlocked(true);
+      });
+    }
+  }, [hasVideo, isPlayingVideo, selected.id]);
+
   return (
     <div className="relative h-80 md:h-full bg-white md:rounded-l-2xl overflow-hidden group">
       {hasVideo && (
@@ -502,11 +530,13 @@ function ModalImages({ selected }) {
           <img
             src={selected.image}
             alt={selected.name}
+            loading="lazy"
+            decoding="async"
             className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-300 ${
               isPlayingVideo ? "opacity-0" : "opacity-100"
             }`}
           />
-          {!isPlayingVideo && hasPlayedOnce && (
+          {!isPlayingVideo && (hasPlayedOnce || autoplayBlocked) && (
             <button
               onClick={handlePlayVideo}
               className="absolute inset-0 flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity z-10"
@@ -524,14 +554,21 @@ function ModalImages({ selected }) {
             </button>
           )}
           <video
-            src={selected.videoSrc}
+            ref={videoRef}
             onEnded={handleVideoEnd}
             autoPlay
+            muted
+            playsInline
+            preload="none"
             controls
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
               isPlayingVideo ? "opacity-100" : "opacity-0 pointer-events-none"
             }`}
-          />
+          >
+            {videoSources.map((source) => (
+              <source key={source.src} src={source.src} type={source.type} />
+            ))}
+          </video>
         </>
       )}
 
@@ -544,6 +581,8 @@ function ModalImages({ selected }) {
                 : selected.image
             }
             alt={selected.name}
+            loading="lazy"
+            decoding="async"
             draggable={false}
             className="absolute inset-0 w-full h-full object-cover object-center transition-transform duration-700 md:group-hover:scale-105"
           />

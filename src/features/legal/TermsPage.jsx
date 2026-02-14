@@ -9,6 +9,7 @@ export default function TermsPage() {
         <img
           src={fondo}
           alt="Fondo Quesillos Manuelita"
+          decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-slate-900/75" />
@@ -26,6 +27,7 @@ export default function TermsPage() {
             <img
               src={logo}
               alt="Quesillos Manuelita"
+              decoding="async"
               className="w-24 h-24 rounded-2xl border-4 border-white/40 shadow-xl"
             />
             <div>

@@ -127,6 +127,8 @@ export default function Header() {
           alt="Quesillos Manuelita"
           width="512"
           height="512"
+          fetchPriority="high"
+          decoding="async"
           className="
             flex-shrink-0 rounded-xl drop-shadow-xl mr-3 z-50
             h-[84px] w-auto ml-4

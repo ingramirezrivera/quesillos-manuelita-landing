@@ -6,8 +6,6 @@ import cheddar from "../../assets/images/products/queso-cheddar.jpg";
 import cheddarAlt from "../../assets/images/products/queso-cheddar-alt.jpg";
 import especial from "../../assets/images/products/queso-especial.jpg";
 import especialAlt from "../../assets/images/products/queso-especial-alt.jpeg";
-// 1. Importa tu video aquí
-import videoBanoMaria from "../../assets/videos/video-bano-maria.mp4";
 
 export const products = [
   {
@@ -15,15 +13,17 @@ export const products = [
     name: "Queso Mozzarella Baño Maria",
     description:
       "Fondo elástico y sabor lácteo, diseñado para no cortarse ni quemarse.",
-    // 2. Añade la propiedad 'videoSrc' con el video importado
-    videoSrc: videoBanoMaria,
+    videoSrc: "/videos/video-bano-maria.optimized.mp4",
+    videoSources: [
+      { src: "/videos/video-bano-maria.optimized.webm", type: "video/webm" },
+      { src: "/videos/video-bano-maria.optimized.mp4", type: "video/mp4" },
+    ],
     image: mozarella,
     imageAlt: mozarellaAlt,
     specs: [
       "Características: Fondo elástico, suave, brillante y homogéneo.",
       "Rendimiento: Diseñado para no cortarse ni quemarse.",
       "Sabor: Fibroso en paladar con esencia de gran sabor lácteo.",
-      "Usos: Comidas rápidas (perros, hamburguesas, maicitos, arepas).",
     ],
   },
   {

@@ -14,6 +14,8 @@ export default function Footer() {
             alt="Logo Quesillos Manuelita"
             width="512"
             height="512"
+            loading="lazy"
+            decoding="async"
             className="w-24 h-24 rounded-2xl mb-6 shadow-lg shadow-white/5"
           />
           <h3 className="text-white text-lg font-bold mb-2">

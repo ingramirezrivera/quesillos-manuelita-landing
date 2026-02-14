@@ -219,6 +219,8 @@ export default function Contact() {
                     alt="Districatar Logo"
                     width="420"
                     height="120"
+                    loading="lazy"
+                    decoding="async"
                     className="h-12 w-auto object-contain"
                   />
                 </div>
@@ -228,6 +230,8 @@ export default function Contact() {
                     alt="Distri Cheese Logo"
                     width="420"
                     height="120"
+                    loading="lazy"
+                    decoding="async"
                     className="h-12 w-auto object-contain"
                   />
                 </div>
