@@ -84,6 +84,11 @@ Variables importantes:
 - `VITE_META_PIXEL_ID`: ID numerico del Pixel de Meta.
 - `VITE_RECAPTCHA_SITE_KEY`: site key publica de Google reCAPTCHA.
 
+Variables server-side (hosting/PHP, no frontend):
+- `RECAPTCHA_SECRET_KEY`: secret key privada de Google reCAPTCHA.
+- `CONTACT_ALLOWED_ORIGINS`: dominios permitidos para enviar formulario (CSV).
+- `CONTACT_FROM_EMAIL`: remitente tecnico usado por `public/api/contact.php`.
+
 Opcional ya existente:
 - `GOOGLE_API_KEY`
 

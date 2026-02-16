@@ -8,25 +8,136 @@ const ReCAPTCHALazy = lazy(() => import("react-google-recaptcha"));
 
 export default function Contact() {
   const recaptchaSiteKey = import.meta.env.VITE_RECAPTCHA_SITE_KEY;
-  // Estado para verificar si el captcha fue resuelto
   const [isVerified, setIsVerified] = useState(false);
+  const [recaptchaToken, setRecaptchaToken] = useState("");
   const [isWhatsAppOpen, setIsWhatsAppOpen] = useState(false);
   const [acceptDataPolicy, setAcceptDataPolicy] = useState(false);
   const [shouldLoadCaptcha, setShouldLoadCaptcha] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
   const sectionRef = useRef(null);
 
-  // 2. Función que se ejecuta cuando el usuario resuelve el captcha
   const handleCaptchaChange = (value) => {
-    // Si 'value' existe, significa que Google confirmó que es humano
     if (value) {
       setIsVerified(true);
+      setRecaptchaToken(value);
     } else {
-      // Si el captcha expira o falla
       setIsVerified(false);
+      setRecaptchaToken("");
     }
   };
 
   const loadCaptcha = () => setShouldLoadCaptcha(true);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (isSubmitting) return;
+
+    if (!recaptchaSiteKey || !isVerified || !acceptDataPolicy || !recaptchaToken) {
+      setSubmitStatus("error");
+      setSubmitMessage(
+        "Completa el reCAPTCHA y acepta la política de datos para continuar.",
+      );
+      return;
+    }
+
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      name: String(formData.get("name") || "").trim(),
+      phone: String(formData.get("phone") || "").trim(),
+      email: String(formData.get("email") || "").trim(),
+      message: String(formData.get("message") || "").trim(),
+      website: String(formData.get("website") || "").trim(),
+      recaptchaToken,
+    };
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^[0-9+\-().\s]{7,40}$/;
+
+    if (!payload.name) {
+      setSubmitStatus("error");
+      setSubmitMessage("El nombre es obligatorio.");
+      return;
+    }
+    if (!payload.phone) {
+      setSubmitStatus("error");
+      setSubmitMessage("El teléfono es obligatorio.");
+      return;
+    }
+    if (!phoneRegex.test(payload.phone)) {
+      setSubmitStatus("error");
+      setSubmitMessage("El teléfono no tiene un formato válido.");
+      return;
+    }
+    if (!payload.email) {
+      setSubmitStatus("error");
+      setSubmitMessage("El correo electrónico es obligatorio.");
+      return;
+    }
+    if (!emailRegex.test(payload.email)) {
+      setSubmitStatus("error");
+      setSubmitMessage("El correo electrónico no tiene un formato válido.");
+      return;
+    }
+    if (!payload.message) {
+      setSubmitStatus("error");
+      setSubmitMessage("El mensaje es obligatorio.");
+      return;
+    }
+    if (payload.message.length < 10) {
+      setSubmitStatus("error");
+      setSubmitMessage("El mensaje debe tener al menos 10 caracteres.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+    setSubmitMessage("");
+
+    try {
+      const response = await fetch("/api/contact.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const responseText = await response.text();
+      let result = null;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error(
+          "El endpoint /api/contact.php no devolvio JSON. En local debes ejecutar PHP para procesar este endpoint.",
+        );
+      }
+
+      if (!response.ok || !result?.ok) {
+        throw new Error(
+          result?.error || "No fue posible enviar tu mensaje en este momento.",
+        );
+      }
+
+      setSubmitStatus("success");
+      setSubmitMessage(
+        "Mensaje enviado correctamente. Te responderemos pronto a contacto@quesillosmanuelita.com.",
+      );
+      event.currentTarget.reset();
+      setIsVerified(false);
+      setRecaptchaToken("");
+      setAcceptDataPolicy(false);
+    } catch (error) {
+      setSubmitStatus("error");
+      setSubmitMessage(
+        error instanceof Error ? error.message : "Error inesperado al enviar.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -278,13 +389,17 @@ export default function Contact() {
 
           {/* COLUMNA DERECHA (FORMULARIO) */}
           <div className="lg:col-span-3 p-8 md:p-12">
-            <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form
+              className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              onSubmit={handleSubmit}
+              noValidate
+            >
               <div className="col-span-1">
                 <label
                   htmlFor="contact-name"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Nombre completo
+                  Nombre completo <span className="text-rose-600">*</span>
                 </label>
                 <input
                   id="contact-name"
@@ -300,7 +415,7 @@ export default function Contact() {
                   htmlFor="contact-phone"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Teléfono
+                  Teléfono <span className="text-rose-600">*</span>
                 </label>
                 <input
                   id="contact-phone"
@@ -308,6 +423,7 @@ export default function Contact() {
                   name="phone"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
                   placeholder="Ej. 300 123 4567"
+                  required
                 />
               </div>
               <div className="col-span-1 md:col-span-2">
@@ -315,7 +431,7 @@ export default function Contact() {
                   htmlFor="contact-email"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Correo electrónico
+                  Correo electrónico <span className="text-rose-600">*</span>
                 </label>
                 <input
                   id="contact-email"
@@ -331,7 +447,7 @@ export default function Contact() {
                   htmlFor="contact-message"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  ¿En qué podemos ayudarte?
+                  ¿En qué podemos ayudarte? <span className="text-rose-600">*</span>
                 </label>
                 <textarea
                   id="contact-message"
@@ -373,6 +489,14 @@ export default function Contact() {
 
               {/* 4. BOTÓN (Deshabilitado hasta verificar) */}
               <div className="col-span-1 md:col-span-2">
+                <input
+                  type="text"
+                  name="website"
+                  tabIndex="-1"
+                  autoComplete="off"
+                  className="hidden"
+                  aria-hidden="true"
+                />
                 <label className="flex items-start gap-3 text-sm text-gray-700 leading-relaxed cursor-pointer">
                   <input
                     type="checkbox"
@@ -396,16 +520,33 @@ export default function Contact() {
               <div className="col-span-1 md:col-span-2 mt-2">
                 <button
                   type="submit"
-                  disabled={!recaptchaSiteKey || !isVerified || !acceptDataPolicy}
+                  disabled={
+                    isSubmitting ||
+                    !recaptchaSiteKey ||
+                    !isVerified ||
+                    !acceptDataPolicy
+                  }
                   className={`w-full md:w-auto font-bold px-8 py-4 rounded-xl transition-all shadow-lg transform ${
-                    isVerified && acceptDataPolicy
+                    isVerified && acceptDataPolicy && !isSubmitting
                       ? "bg-primary text-black hover:bg-yellow-400 hover:shadow-yellow-500/30 hover:-translate-y-1 cursor-pointer"
                       : "bg-gray-300 text-gray-500 cursor-not-allowed shadow-none"
                   }`}
                 >
-                  Enviar Mensaje
+                  {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
                 </button>
               </div>
+
+              {submitStatus !== "idle" && (
+                <div
+                  className={`col-span-1 md:col-span-2 rounded-xl px-4 py-3 text-sm ${
+                    submitStatus === "success"
+                      ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                      : "bg-rose-50 text-rose-700 border border-rose-200"
+                  }`}
+                >
+                  {submitMessage}
+                </div>
+              )}
             </form>
           </div>
         </div>
