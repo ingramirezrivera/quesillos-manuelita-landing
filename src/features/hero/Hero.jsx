@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { slides } from "./slides";
 
 export default function Hero() {
+  const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoErrored, setVideoErrored] = useState(false);
-  const [showPosterFallback, setShowPosterFallback] = useState(false);
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -23,37 +23,45 @@ export default function Hero() {
   }, [videoSlide.poster]);
 
   useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (!entry?.isIntersecting) return;
+        setShouldLoadVideo(true);
+        observer.disconnect();
+      },
+      { threshold: 0.15, rootMargin: "200px 0px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoadVideo) return;
     const video = videoRef.current;
     if (!video || videoErrored) return;
 
     const playPromise = video.play();
-    if (playPromise?.catch) playPromise.catch(() => {});
-  }, [videoErrored]);
-
-  useEffect(() => {
-    if (isVideoPlaying || videoErrored) {
-      setShowPosterFallback(videoErrored);
-      return;
+    if (playPromise?.catch) {
+      playPromise.catch(() => {});
     }
-
-    const timer = window.setTimeout(() => {
-      setShowPosterFallback(true);
-    }, 5000);
-
-    return () => window.clearTimeout(timer);
-  }, [isVideoPlaying, videoErrored]);
+  }, [shouldLoadVideo, videoErrored]);
 
   return (
     <section
       ref={sectionRef}
       id="hero"
       className="
-        relative -mt-6 h-[85vh] md:h-[95vh] overflow-hidden bg-white
+        relative -mt-6 h-[85vh] md:h-[95vh] overflow-hidden
         rounded-b-3xl
       "
     >
       <div className="absolute inset-0">
-        {!isVideoPlaying && showPosterFallback && (
+        {!isVideoPlaying && (
           <img
             src={videoSlide.poster}
             alt={videoSlide.alt}
@@ -62,26 +70,30 @@ export default function Hero() {
           />
         )}
 
-        {!videoErrored && (
+        {shouldLoadVideo && !videoErrored && (
           <video
             ref={videoRef}
             key={videoSlide.videoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
               isVideoPlaying ? "opacity-100" : "opacity-0"
             }`}
-            preload="auto"
+            preload="metadata"
             autoPlay
             muted
             loop
             playsInline
-            onPlaying={() => {
-              setIsVideoPlaying(true);
-              setShowPosterFallback(false);
+            onCanPlay={() => {
+              const video = videoRef.current;
+              if (!video) return;
+              const playPromise = video.play();
+              if (playPromise?.catch) playPromise.catch(() => {});
             }}
+            onPlaying={() => setIsVideoPlaying(true)}
+            onWaiting={() => setIsVideoPlaying(false)}
+            onStalled={() => setIsVideoPlaying(false)}
             onError={() => {
               setVideoErrored(true);
               setIsVideoPlaying(false);
-              setShowPosterFallback(true);
             }}
           >
             {(videoSlide.videoSources || []).map((source) => (
@@ -89,7 +101,6 @@ export default function Hero() {
             ))}
           </video>
         )}
-
       </div>
 
       <div className="absolute inset-0">
