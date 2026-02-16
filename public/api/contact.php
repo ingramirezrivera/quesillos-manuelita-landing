@@ -59,6 +59,14 @@ function cleanLine(string $value): string
     return trim($value);
 }
 
+function textLength(string $value): int
+{
+    if (function_exists("mb_strlen")) {
+        return mb_strlen($value, "UTF-8");
+    }
+    return strlen($value);
+}
+
 function verifyRecaptcha(string $token, string $remoteIp): bool
 {
     $secret = getEnvValue("RECAPTCHA_SECRET_KEY");
@@ -143,7 +151,7 @@ $remoteIp = cleanLine((string) ($_SERVER["REMOTE_ADDR"] ?? ""));
 if ($website !== "") {
     respond(400, ["ok" => false, "error" => "Solicitud invalida"]);
 }
-if (strlen($name) < 2 || strlen($name) > 120) {
+if (!preg_match("/^[\\p{L}\\p{M}\\s'.-]{2,120}$/u", $name)) {
     respond(422, ["ok" => false, "error" => "Nombre invalido"]);
 }
 if ($phone === "" || !preg_match("/^[0-9+\\-().\\s]{7,40}$/", $phone)) {
@@ -152,7 +160,7 @@ if ($phone === "" || !preg_match("/^[0-9+\\-().\\s]{7,40}$/", $phone)) {
 if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 254) {
     respond(422, ["ok" => false, "error" => "Correo invalido"]);
 }
-if (strlen($message) < 10 || strlen($message) > 3000) {
+if (textLength($message) < 10 || textLength($message) > 3000) {
     respond(422, ["ok" => false, "error" => "Mensaje invalido"]);
 }
 if ($recaptchaToken === "" || strlen($recaptchaToken) > 5000) {
