@@ -1,6 +1,6 @@
 ﻿// src/features/hero/slides.js
 
-import heroVideo from "../../assets/videos/hero-intro.mp4";
+import heroVideo from "../../assets/videos/Quesillos-Manuelita-intro.mp4";
 import posterHero from "../../assets/images/hero/poster-hero.jpg";
 
 export const slides = [
