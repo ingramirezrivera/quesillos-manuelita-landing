@@ -67,11 +67,15 @@ function textLength(string $value): int
     return strlen($value);
 }
 
-function verifyRecaptcha(string $token, string $remoteIp): bool
+function verifyRecaptcha(string $token, string $remoteIp): array
 {
     $secret = getEnvValue("RECAPTCHA_SECRET_KEY");
     if ($secret === "") {
-        return false;
+        return [
+            "ok" => false,
+            "error" => "missing-secret",
+            "codes" => [],
+        ];
     }
 
     $payload = http_build_query([
@@ -91,7 +95,16 @@ function verifyRecaptcha(string $token, string $remoteIp): bool
         curl_setopt($ch, CURLOPT_TIMEOUT, 8);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-        $responseBody = (string) curl_exec($ch);
+        $curlResponse = curl_exec($ch);
+        if ($curlResponse === false) {
+            curl_close($ch);
+            return [
+                "ok" => false,
+                "error" => "transport-error",
+                "codes" => [],
+            ];
+        }
+        $responseBody = (string) $curlResponse;
         curl_close($ch);
     } else {
         $context = stream_context_create([
@@ -107,11 +120,44 @@ function verifyRecaptcha(string $token, string $remoteIp): bool
     }
 
     if ($responseBody === "") {
-        return false;
+        return [
+            "ok" => false,
+            "error" => "empty-response",
+            "codes" => [],
+        ];
     }
 
     $decoded = json_decode($responseBody, true);
-    return is_array($decoded) && !empty($decoded["success"]);
+    if (!is_array($decoded)) {
+        return [
+            "ok" => false,
+            "error" => "invalid-json",
+            "codes" => [],
+        ];
+    }
+
+    if (!empty($decoded["success"])) {
+        return [
+            "ok" => true,
+            "error" => "",
+            "codes" => [],
+        ];
+    }
+
+    $codes = [];
+    if (!empty($decoded["error-codes"]) && is_array($decoded["error-codes"])) {
+        foreach ($decoded["error-codes"] as $code) {
+            if (is_string($code) && $code !== "") {
+                $codes[] = $code;
+            }
+        }
+    }
+
+    return [
+        "ok" => false,
+        "error" => "verification-failed",
+        "codes" => $codes,
+    ];
 }
 
 if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -194,8 +240,17 @@ if (count($events) >= $rateLimit) {
 $events[] = $now;
 @file_put_contents($rateFile, json_encode($events), LOCK_EX);
 
-if (!verifyRecaptcha($recaptchaToken, $remoteIp)) {
-    respond(400, ["ok" => false, "error" => "No se pudo validar reCAPTCHA"]);
+    $recaptchaResult = verifyRecaptcha($recaptchaToken, $remoteIp);
+if (empty($recaptchaResult["ok"])) {
+    $errorCode = isset($recaptchaResult["error"]) && is_string($recaptchaResult["error"])
+        ? $recaptchaResult["error"]
+        : "unknown-error";
+    $providerCodes = [];
+    if (isset($recaptchaResult["codes"]) && is_array($recaptchaResult["codes"])) {
+        $providerCodes = $recaptchaResult["codes"];
+    }
+    $providerInfo = count($providerCodes) > 0 ? (" (" . implode(", ", $providerCodes) . ")") : "";
+    respond(400, ["ok" => false, "error" => "No se pudo validar reCAPTCHA: " . $errorCode . $providerInfo]);
 }
 
 $to = "contacto@quesillosmanuelita.com";
