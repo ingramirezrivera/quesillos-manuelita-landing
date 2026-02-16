@@ -38,7 +38,7 @@ export default function Contact() {
     if (!recaptchaSiteKey || !isVerified || !acceptDataPolicy || !recaptchaToken) {
       setSubmitStatus("error");
       setSubmitMessage(
-        "Completa el reCAPTCHA y acepta la polÌtica de datos para continuar.",
+        "Completa el reCAPTCHA y acepta la pol√≠tica de datos para continuar.",
       );
       return;
     }
@@ -63,22 +63,22 @@ export default function Contact() {
     }
     if (!payload.phone) {
       setSubmitStatus("error");
-      setSubmitMessage("El telÈfono es obligatorio.");
+      setSubmitMessage("El tel√©fono es obligatorio.");
       return;
     }
     if (!phoneRegex.test(payload.phone)) {
       setSubmitStatus("error");
-      setSubmitMessage("El telÈfono no tiene un formato v·lido.");
+      setSubmitMessage("El tel√©fono no tiene un formato v√°lido.");
       return;
     }
     if (!payload.email) {
       setSubmitStatus("error");
-      setSubmitMessage("El correo electrÛnico es obligatorio.");
+      setSubmitMessage("El correo electr√≥nico es obligatorio.");
       return;
     }
     if (!emailRegex.test(payload.email)) {
       setSubmitStatus("error");
-      setSubmitMessage("El correo electrÛnico no tiene un formato v·lido.");
+      setSubmitMessage("El correo electr√≥nico no tiene un formato v√°lido.");
       return;
     }
     if (!payload.message) {
@@ -171,7 +171,7 @@ export default function Contact() {
             Hablemos de negocios
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-            øTienes dudas sobre nuestros productos o quieres ser aliado? Estamos
+            ¬øTienes dudas sobre nuestros productos o quieres ser aliado? Estamos
             listos para atenderte.
           </p>
         </div>
@@ -185,10 +185,10 @@ export default function Contact() {
 
             <div className="relative z-10">
               <h3 className="text-2xl font-bold mb-6">
-                InformaciÛn de Contacto
+                Informaci√≥n de Contacto
               </h3>
               <p className="text-slate-300 mb-8 leading-relaxed">
-                Llena el formulario y nuestro equipo comercial se pondr· en
+                Llena el formulario y nuestro equipo comercial se pondr√° en
                 contacto contigo en menos de 24 horas.
               </p>
 
@@ -218,7 +218,7 @@ export default function Contact() {
                       <div className="text-left">
                         <p className="font-semibold text-white">WhatsApp</p>
                         <p className="text-slate-400 text-sm mt-1">
-                          Elige tu zona de atenciÛn
+                          Elige tu zona de atenci√≥n
                         </p>
                       </div>
                     </div>
@@ -241,16 +241,16 @@ export default function Contact() {
                   {isWhatsAppOpen && (
                     <div id="whatsapp-options" className="grid gap-2 pl-[60px]">
                       <a
-                        href={`https://wa.me/573042091223?text=${encodeURIComponent("Hola, quiero informaciÛn para MedellÌn y ¡rea Metropolitana.")}`}
+                        href={`https://wa.me/573042091223?text=${encodeURIComponent("Hola, quiero informaci√≥n para Medell√≠n y √Årea Metropolitana.")}`}
                         onClick={() => trackWhatsAppClick({ zone: "medellin", source: "contact_section", phone: "573042091223" })}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="inline-flex items-center justify-center rounded-lg bg-[#25D366] text-white font-semibold px-4 py-2.5 hover:bg-[#20bd5a] transition-colors"
                       >
-                        MedellÌn
+                        Medell√≠n
                       </a>
                       <a
-                        href={`https://wa.me/573009891200?text=${encodeURIComponent("Hola, quiero informaciÛn para Oriente y Valle de San Nicol·s.")}`}
+                        href={`https://wa.me/573009891200?text=${encodeURIComponent("Hola, quiero informaci√≥n para Oriente y Valle de San Nicol√°s.")}`}
                         onClick={() => trackWhatsAppClick({ zone: "oriente", source: "contact_section", phone: "573009891200" })}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -262,7 +262,7 @@ export default function Contact() {
                   )}
                 </div>
 
-                {/* EscrÌbenos */}
+                {/* Escr√≠benos */}
                 <div className="flex items-start gap-4">
                   <div className="bg-white/10 p-3 rounded-lg text-primary">
                     <svg
@@ -281,7 +281,7 @@ export default function Contact() {
                     </svg>
                   </div>
                   <div>
-                    <p className="font-semibold text-white">EscrÌbenos</p>
+                    <p className="font-semibold text-white">Escr√≠benos</p>
                     <p className="text-slate-400 text-sm mt-1">
                       contacto@quesillosmanuelita.com
                     </p>
@@ -407,7 +407,7 @@ export default function Contact() {
                   type="text"
                   name="name"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition"
-                  placeholder="Ej. Juan PÈrez"
+                  placeholder="Ej. Juan P√©rez"
                   required
                 />
               </div>
@@ -416,7 +416,7 @@ export default function Contact() {
                   htmlFor="contact-phone"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  TelÈfono <span className="text-rose-600">*</span>
+                  Tel√©fono <span className="text-rose-600">*</span>
                 </label>
                 <input
                   id="contact-phone"
@@ -432,7 +432,7 @@ export default function Contact() {
                   htmlFor="contact-email"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  Correo electrÛnico <span className="text-rose-600">*</span>
+                  Correo electr√≥nico <span className="text-rose-600">*</span>
                 </label>
                 <input
                   id="contact-email"
@@ -448,19 +448,19 @@ export default function Contact() {
                   htmlFor="contact-message"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  øEn quÈ podemos ayudarte? <span className="text-rose-600">*</span>
+                  ¬øEn qu√© podemos ayudarte? <span className="text-rose-600">*</span>
                 </label>
                 <textarea
                   id="contact-message"
                   name="message"
                   rows="4"
                   className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary transition resize-none"
-                  placeholder="Escribe aquÌ tu mensaje..."
+                  placeholder="Escribe aqu√≠ tu mensaje..."
                   required
                 />
               </div>
 
-              {/* 3. AQUÕ EST¡ EL COMPONENTE RECAPTCHA */}
+              {/* 3. AQU√ç EST√Å EL COMPONENTE RECAPTCHA */}
               <div className="col-span-1 md:col-span-2 flex justify-center md:justify-start">
                 {recaptchaSiteKey ? (
                   shouldLoadCaptcha ? (
@@ -488,7 +488,7 @@ export default function Contact() {
                 )}
               </div>
 
-              {/* 4. BOT”N (Deshabilitado hasta verificar) */}
+              {/* 4. BOT√ìN (Deshabilitado hasta verificar) */}
               <div className="col-span-1 md:col-span-2">
                 <input
                   type="text"
@@ -511,7 +511,7 @@ export default function Contact() {
                       to="/politica-datos"
                       className="text-amber-700 font-semibold hover:text-amber-800 hover:underline"
                     >
-                      PolÌtica de Tratamiento de Datos
+                      Pol√≠tica de Tratamiento de Datos
                     </Link>{" "}
                     de Quesillos Manuelita S.A.S.
                   </span>
