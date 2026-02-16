@@ -19,10 +19,38 @@ function respond(int $status, array $payload): void
     exit;
 }
 
+/**
+ * Configuracion local opcional (server-only).
+ * Debe devolver un array asociativo:
+ * return [
+ *   'RECAPTCHA_SECRET_KEY' => '...',
+ *   'CONTACT_ALLOWED_ORIGINS' => 'https://dominio.com,https://www.dominio.com',
+ *   'CONTACT_FROM_EMAIL' => 'no-reply@dominio.com',
+ * ];
+ */
+$localConfig = [];
+$localConfigPath = __DIR__ . DIRECTORY_SEPARATOR . "contact.config.php";
+if (is_file($localConfigPath)) {
+    $loaded = require $localConfigPath;
+    if (is_array($loaded)) {
+        $localConfig = $loaded;
+    }
+}
+
 function getEnvValue(string $key): string
 {
+    global $localConfig;
+
     $value = getenv($key);
-    return is_string($value) ? trim($value) : "";
+    if (is_string($value) && trim($value) !== "") {
+        return trim($value);
+    }
+
+    if (isset($localConfig[$key]) && is_string($localConfig[$key])) {
+        return trim($localConfig[$key]);
+    }
+
+    return "";
 }
 
 function cleanLine(string $value): string
