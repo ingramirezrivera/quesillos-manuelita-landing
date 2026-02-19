@@ -44,6 +44,11 @@ const SEO_BY_PATH = {
     description:
       "Preguntas frecuentes sobre queso tipo mozzarella: conservación, cadena de frío, manipulación higiénica, rendimiento y uso en cocina.",
   },
+  "/whatsappredes": {
+    title: "WhatsApp Redes | Quesillos Manuelita",
+    description:
+      "Selecciona Medellín u Oriente para escribir por WhatsApp y solicitar una muestra de queso vista en redes sociales.",
+  },
 };
 
 function setMeta(attr, key, value) {

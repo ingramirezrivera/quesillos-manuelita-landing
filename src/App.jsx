@@ -14,6 +14,9 @@ const TermsPage = lazy(() => import("./features/legal/TermsPage"));
 const DataPolicyPage = lazy(() => import("./features/legal/DataPolicyPage"));
 const CookiesPolicyPage = lazy(() => import("./features/legal/CookiesPolicyPage"));
 const FaqPage = lazy(() => import("./features/legal/FaqPage"));
+const WhatsAppRedesPage = lazy(
+  () => import("./features/whatsapp/WhatsAppRedesPage"),
+);
 import CookieConsent from "./components/CookieConsent";
 import ConsentManagedTags from "./components/ConsentManagedTags";
 import SeoManager from "./components/SeoManager";
@@ -42,7 +45,8 @@ function App() {
     pathname !== "/terminos" &&
     pathname !== "/politica-datos" &&
     pathname !== "/politica-cookies" &&
-    pathname !== "/faq";
+    pathname !== "/faq" &&
+    pathname !== "/whatsappredes";
 
   return (
     <>
@@ -55,6 +59,7 @@ function App() {
           <Route path="/politica-datos" element={<DataPolicyPage />} />
           <Route path="/politica-cookies" element={<CookiesPolicyPage />} />
           <Route path="/faq" element={<FaqPage />} />
+          <Route path="/whatsappredes" element={<WhatsAppRedesPage />} />
         </Routes>
       </Suspense>
       {showWhatsAppFloat && <WhatsAppFloat />}
