@@ -53,10 +53,6 @@ export default function WhatsAppRedesPage() {
             <h1 className="mt-3 text-3xl md:text-5xl font-black leading-tight">
               Elige tu zona de WhatsApp
             </h1>
-            <p className="mt-4 text-slate-200 max-w-2xl mx-auto text-base md:text-lg">
-              Escríbenos y pide tu muestra. Ya cargamos el mensaje para que solo
-              tengas que elegir Medellín u Oriente.
-            </p>
           </div>
 
           <div className="mt-10 max-w-xl mx-auto flex flex-col gap-4">
