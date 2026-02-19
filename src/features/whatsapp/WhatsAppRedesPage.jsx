@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+﻿import { useEffect } from "react";
 import logo from "../../assets/images/logos/logo.jpeg";
 import { trackEvent, trackWhatsAppClick } from "../../utils/tracking";
 
@@ -18,7 +18,7 @@ const CONTACT_ZONES = [
 ];
 
 function buildMessage(zoneLabel) {
-  return `Quesillos Manuelita venta ${zoneLabel}\n\n¡Hola! Vi el queso en redes sociales y me gustaría probar una muestra. Soy de ${zoneLabel} y quiero más información, por favor.`;
+  return `¡Hola! Vi su marca y me interesa conocer más sobre sus productos. Me brindan información por favor.`;
 }
 
 export default function WhatsAppRedesPage() {
