@@ -1,6 +1,7 @@
 ﻿// src/features/hero/slides.js
 
 import heroVideo from "../../assets/videos/hero-intro.mp4";
+import heroMobileVideo from "../../assets/videos/hero-mobile.mp4";
 import posterHero from "../../assets/images/hero/poster-hero.jpg";
 
 export const slides = [
@@ -8,6 +9,7 @@ export const slides = [
     id: "hero-video-01",
     type: "video",
     videoSrc: heroVideo,
+    mobileVideoSrc: heroMobileVideo,
     videoSources: [{ src: heroVideo, type: "video/mp4" }],
     poster: posterHero,
     title: "Del arte del ordeño a la perfección del queso",

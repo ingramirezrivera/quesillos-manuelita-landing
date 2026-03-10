@@ -5,10 +5,16 @@ export default function Hero() {
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoErrored, setVideoErrored] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
 
   const videoSlide = slides[0];
+  const activeVideoSrc =
+    isMobile && videoSlide.mobileVideoSrc
+      ? videoSlide.mobileVideoSrc
+      : videoSlide.videoSrc;
+  const activeVideoSources = [{ src: activeVideoSrc, type: "video/mp4" }];
 
   useEffect(() => {
     const preloadId = "hero-poster-preload";
@@ -21,6 +27,20 @@ export default function Hero() {
     link.href = videoSlide.poster;
     document.head.appendChild(link);
   }, [videoSlide.poster]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 767px)");
+    const updateViewport = (event) => {
+      setIsMobile(event.matches);
+      setIsVideoPlaying(false);
+      setVideoErrored(false);
+    };
+
+    updateViewport(mediaQuery);
+    mediaQuery.addEventListener("change", updateViewport);
+
+    return () => mediaQuery.removeEventListener("change", updateViewport);
+  }, []);
 
   useEffect(() => {
     const node = sectionRef.current;
@@ -73,7 +93,7 @@ export default function Hero() {
         {shouldLoadVideo && !videoErrored && (
           <video
             ref={videoRef}
-            key={videoSlide.videoSrc}
+            key={activeVideoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
               isVideoPlaying ? "opacity-100" : "opacity-0"
             }`}
@@ -96,7 +116,7 @@ export default function Hero() {
               setIsVideoPlaying(false);
             }}
           >
-            {(videoSlide.videoSources || []).map((source) => (
+            {activeVideoSources.map((source) => (
               <source key={source.src} src={source.src} type={source.type} />
             ))}
           </video>
