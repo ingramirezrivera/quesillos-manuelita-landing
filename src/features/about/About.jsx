@@ -22,7 +22,10 @@ export default function About() {
       const canMoveLeft = current.scrollLeft > threshold;
       const canMoveRight = current.scrollLeft < maxScrollLeft - threshold;
 
-      if ((direction === "left" && !canMoveLeft) || (direction === "right" && !canMoveRight)) {
+      if (
+        (direction === "left" && !canMoveLeft) ||
+        (direction === "right" && !canMoveRight)
+      ) {
         return;
       }
 
@@ -276,7 +279,7 @@ export default function About() {
       </div>
 
       {/* KPI MOBILE */}
-      <div className="md:hidden relative z-30 -mt-10 mb-12 overflow-hidden w-full">
+      <div className="md:hidden relative z-30 -mt-10 mb-1 overflow-hidden w-full">
         <div className="bg-white py-6 shadow-xl border-y border-slate-100">
           <div className="animate-infinite-scroll hover:[animation-play-state:paused]">
             {[...stats, ...stats].map((stat, index) => (
@@ -446,4 +449,3 @@ function KPI({ number, label, icon }) {
     </div>
   );
 }
-
