@@ -1,4 +1,4 @@
-﻿import { useEffect } from "react";
+import { useEffect } from "react";
 import logo from "../../assets/images/logos/logo.jpeg";
 import { trackEvent, trackWhatsAppClick } from "../../utils/tracking";
 
