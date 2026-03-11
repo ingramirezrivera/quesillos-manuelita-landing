@@ -4,8 +4,10 @@ import { slides } from "./slides";
 export default function Hero() {
   const [shouldLoadVideo, setShouldLoadVideo] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isBuffering, setIsBuffering] = useState(false);
   const [videoErrored, setVideoErrored] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
   const sectionRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -14,8 +16,8 @@ export default function Hero() {
     isMobile && videoSlide.mobileVideoSrc
       ? videoSlide.mobileVideoSrc
       : videoSlide.videoSrc;
-  const activeVideoSources = [{ src: activeVideoSrc, type: "video/mp4" }];
 
+  // Preload poster image
   useEffect(() => {
     const preloadId = "hero-poster-preload";
     if (document.getElementById(preloadId)) return;
@@ -28,12 +30,13 @@ export default function Hero() {
     document.head.appendChild(link);
   }, [videoSlide.poster]);
 
+
+
+  // Keep track of viewport changes to switch video source
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 767px)");
     const updateViewport = (event) => {
       setIsMobile(event.matches);
-      setIsVideoPlaying(false);
-      setVideoErrored(false);
     };
 
     updateViewport(mediaQuery);
@@ -42,6 +45,7 @@ export default function Hero() {
     return () => mediaQuery.removeEventListener("change", updateViewport);
   }, []);
 
+  // Use IntersectionObserver to delay loading until near viewport
   useEffect(() => {
     const node = sectionRef.current;
     if (!node) return;
@@ -60,16 +64,44 @@ export default function Hero() {
     return () => observer.disconnect();
   }, []);
 
+  // Handle video source changes without unmounting the video element
   useEffect(() => {
-    if (!shouldLoadVideo) return;
+    if (!shouldLoadVideo || !videoRef.current) return;
+    
     const video = videoRef.current;
-    if (!video || videoErrored) return;
+    
+    // Only update if the source actually changed
+    if (video.src && !video.src.includes(activeVideoSrc)) {
+      setIsVideoPlaying(false);
+      setIsBuffering(false);
+      setVideoErrored(false);
+      
+      video.src = activeVideoSrc;
+      video.load();
+      
+      const playPromise = video.play();
+      if (playPromise?.catch) {
+        playPromise.catch(() => {});
+      }
+    }
+  }, [activeVideoSrc, shouldLoadVideo]);
+
+  // Initial play trigger
+  useEffect(() => {
+    if (!shouldLoadVideo || !videoRef.current) return;
+    const video = videoRef.current;
+    if (videoErrored) return;
+
+    // Set src if it hasn't been set yet
+    if (!video.src && activeVideoSrc) {
+       video.src = activeVideoSrc;
+    }
 
     const playPromise = video.play();
     if (playPromise?.catch) {
       playPromise.catch(() => {});
     }
-  }, [shouldLoadVideo, videoErrored]);
+  }, [shouldLoadVideo, videoErrored, activeVideoSrc]);
 
   return (
     <section
@@ -80,52 +112,67 @@ export default function Hero() {
         rounded-b-3xl
       "
     >
-      <div className="absolute inset-0">
-        {!isVideoPlaying && (
-          <img
-            src={videoSlide.poster}
-            alt={videoSlide.alt}
-            className="absolute inset-0 h-full w-full object-cover"
-            fetchPriority="high"
-          />
-        )}
-
+      <div className="absolute inset-0 bg-slate-900">
+        {/* Always keep the poster as the base background. */}
+        <img
+          src={videoSlide.poster}
+          alt={videoSlide.alt}
+          className="absolute inset-0 h-full w-full object-cover transition-opacity duration-1000"
+          fetchPriority="high"
+        />
+        
         {shouldLoadVideo && !videoErrored && (
           <video
             ref={videoRef}
-            key={activeVideoSrc}
             className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-700 ${
               isVideoPlaying ? "opacity-100" : "opacity-0"
             }`}
-            preload="metadata"
+            preload="auto"
             autoPlay
             muted
             loop
             playsInline
+            onLoadStart={() => {
+              setIsBuffering(true);
+            }}
             onCanPlay={() => {
+              setIsBuffering(false);
               const video = videoRef.current;
               if (!video) return;
               const playPromise = video.play();
               if (playPromise?.catch) playPromise.catch(() => {});
             }}
-            onPlaying={() => setIsVideoPlaying(true)}
-            onWaiting={() => setIsVideoPlaying(false)}
-            onStalled={() => setIsVideoPlaying(false)}
+            onPlaying={() => {
+              setIsBuffering(false);
+              setIsVideoPlaying(true);
+            }}
+            onWaiting={() => {
+               setIsBuffering(true);
+            }}
+            onStalled={() => {
+               setIsBuffering(true);
+            }}
             onError={() => {
               setVideoErrored(true);
               setIsVideoPlaying(false);
+              setIsBuffering(false);
             }}
           >
-            {activeVideoSources.map((source) => (
-              <source key={source.src} src={source.src} type={source.type} />
-            ))}
           </video>
         )}
       </div>
 
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-20 pointer-events-none">
         <SlideItem slide={videoSlide} isActive={true} />
       </div>
+
+      {/* Show a loading spinner if we are supposed to load the video but it has stalled or hasn't started playing yet. 
+          Placed at the very end with z-30 to guarantee it overlays absolutely everything. */}
+      {shouldLoadVideo && (!isVideoPlaying || isBuffering) && !videoErrored && (
+        <div className="absolute inset-0 flex items-center justify-center bg-black/40 z-30 transition-opacity duration-300 pointer-events-none">
+           <div className="w-16 h-16 border-4 border-white/20 border-t-primary rounded-full animate-spin shadow-xl"></div>
+        </div>
+      )}
     </section>
   );
 }

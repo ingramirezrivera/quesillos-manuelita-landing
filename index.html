@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
@@ -32,11 +32,25 @@
 
     <title>Quesillos Manuelita | Quesillos tipo mozzarella</title>
   </head>
-  <body>
-    <div id="root"></div>
+  <body style="margin: 0; padding: 0;">
+    <!-- Initial Loading Spinner (removed automatically when React mounts) -->
+    <div id="root">
+      <div style="display:flex; justify-content:center; align-items:center; height:100vh; background-color:#1e293b; flex-direction:column;">
+        <img src="/src/assets/images/logos/logo.jpeg" alt="Quesillos Manuelita Logo" style="width: 120px; height: auto; border-radius: 16px; margin-bottom: 2rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5); opacity: 0; animation: fadeInLogo 0.6s ease-out 0.3s forwards;" />
+        <div style="width: 60px; height: 60px; border: 5px solid rgba(255,255,255,0.2); border-top-color: #facc15; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+        <div style="margin-top: 20px; color: white; font-family: sans-serif; font-weight: bold; font-size: 1.2rem; opacity: 0; animation: fadeInLogo 0.6s ease-out 0.6s forwards;">Cargando...</div>
+      </div>
+      <style>
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes fadeInLogo {
+          0% { opacity: 0; transform: scale(0.85); }
+          100% { opacity: 1; transform: scale(1); }
+        }
+      </style>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
-
-
-
