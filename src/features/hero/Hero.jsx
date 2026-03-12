@@ -18,7 +18,6 @@ export default function Hero() {
   const hasStartedPlaying = useRef(false); // once true, never show spinner again
   const bufferCheckInterval = useRef(null);
   const loadingTimeout = useRef(null);
-  const [parallaxOffset, setParallaxOffset] = useState(0);
 
   const videoSlide = slides[0];
   const activeVideoSrc =
@@ -52,22 +51,6 @@ export default function Hero() {
     link.href = videoSlide.poster;
     document.head.appendChild(link);
   }, [videoSlide.poster]);
-
-  // ─── Parallax scroll effect ───
-  useEffect(() => {
-    const handleScroll = () => {
-      const section = sectionRef.current;
-      if (!section) return;
-      const rect = section.getBoundingClientRect();
-      // Only apply parallax when section is visible
-      if (rect.bottom > 0 && rect.top < window.innerHeight) {
-        const scrolled = -rect.top;
-        setParallaxOffset(scrolled * 0.35); // 0.35 = parallax speed (slower than scroll)
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   // ─── Track viewport for video source switching ───
   useEffect(() => {
@@ -195,15 +178,7 @@ export default function Hero() {
         rounded-b-3xl
       "
     >
-      <div
-        className="absolute inset-0 bg-slate-900"
-        style={{
-          transform: `translateY(${parallaxOffset}px)`,
-          willChange: "transform",
-          top: "-15%",
-          bottom: "-15%",
-        }}
-      >
+      <div className="absolute inset-0 bg-slate-900">
         {/* Poster image — always visible as base layer */}
         <img
           src={videoSlide.poster}
