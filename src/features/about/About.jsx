@@ -6,7 +6,9 @@ export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [sectionVisible, setSectionVisible] = useState(false);
+  const [aboutParallax, setAboutParallax] = useState(0);
   const sectionRef = useRef(null);
+  const aboutHeroRef = useRef(null);
 
   const activeSection = ABOUT_SECTIONS[activeIndex];
 
@@ -38,6 +40,21 @@ export default function About() {
     return () => observer.disconnect();
   }, []);
 
+  // Parallax for the About hero image
+  useEffect(() => {
+    const handleScroll = () => {
+      const el = aboutHeroRef.current;
+      if (!el) return;
+      const rect = el.getBoundingClientRect();
+      if (rect.bottom > 0 && rect.top < window.innerHeight) {
+        const scrolled = -rect.top;
+        setAboutParallax(scrolled * 0.3);
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const stats = [
     { number: "15+", label: "Años de experiencia", icon: "calendar" },
     { number: "500k+", label: "Litros procesados/año", icon: "drop" },
@@ -55,14 +72,19 @@ export default function About() {
       `}</style>
 
       {/* --- SECCIÓN HERO --- */}
-      <div className="relative h-[500px] md:h-[600px] flex items-center justify-center">
+      <div ref={aboutHeroRef} className="relative h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <img
             src={fondo}
             alt="Fondo Nosotros"
-            className="w-full h-full object-cover brightness-50"
-            loading="lazy"
-            decoding="async"
+            className="w-full h-full object-cover brightness-50 absolute"
+            style={{
+              transform: `translateY(${aboutParallax}px)`,
+              willChange: "transform",
+              top: "-15%",
+              bottom: "-15%",
+              height: "130%",
+            }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-slate-50 z-10" />
         </div>
