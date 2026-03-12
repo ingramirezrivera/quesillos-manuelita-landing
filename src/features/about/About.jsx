@@ -6,9 +6,7 @@ export default function About() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [sectionVisible, setSectionVisible] = useState(false);
-  const [aboutParallax, setAboutParallax] = useState(0);
   const sectionRef = useRef(null);
-  const aboutHeroRef = useRef(null);
 
   const activeSection = ABOUT_SECTIONS[activeIndex];
 
@@ -40,21 +38,6 @@ export default function About() {
     return () => observer.disconnect();
   }, []);
 
-  // Parallax for the About hero image
-  useEffect(() => {
-    const handleScroll = () => {
-      const el = aboutHeroRef.current;
-      if (!el) return;
-      const rect = el.getBoundingClientRect();
-      if (rect.bottom > 0 && rect.top < window.innerHeight) {
-        const scrolled = -rect.top;
-        setAboutParallax(scrolled * 0.3);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   const stats = [
     { number: "15+", label: "Años de experiencia", icon: "calendar" },
     { number: "500k+", label: "Litros procesados/año", icon: "drop" },
@@ -72,19 +55,14 @@ export default function About() {
       `}</style>
 
       {/* --- SECCIÓN HERO --- */}
-      <div ref={aboutHeroRef} className="relative h-[500px] md:h-[600px] flex items-center justify-center overflow-hidden">
+      <div className="relative h-[500px] md:h-[600px] flex items-center justify-center">
         <div className="absolute inset-0 z-0">
           <img
             src={fondo}
             alt="Fondo Nosotros"
-            className="w-full h-full object-cover brightness-50 absolute"
-            style={{
-              transform: `translateY(${aboutParallax}px)`,
-              willChange: "transform",
-              top: "-15%",
-              bottom: "-15%",
-              height: "130%",
-            }}
+            className="w-full h-full object-cover brightness-50"
+            loading="lazy"
+            decoding="async"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-slate-50 z-10" />
         </div>
@@ -104,7 +82,7 @@ export default function About() {
 
         {/* KPI DESKTOP */}
         <div className="hidden md:block absolute -bottom-16 w-full z-30 px-4">
-          <div className="max-w-7xl mx-auto grid grid-cols-4 gap-4 bg-white rounded-2xl shadow-xl p-6 border border-slate-100">
+          <div className="max-w-7xl mx-auto grid grid-cols-4 gap-4 bg-white rounded-2xl shadow-xl p-8 pb-10 border border-slate-100">
             {stats.map((stat, index) => (
               <KPI key={index} {...stat} />
             ))}
@@ -138,18 +116,23 @@ export default function About() {
         {/* MOBILE: Horizontal scrollable tabs + content below */}
         <div className="md:hidden">
           {/* Scrollable tab buttons */}
-          <div className="flex gap-2 overflow-x-auto hide-scrollbar pb-4 -mx-2 px-2">
+          <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-6 -mx-4 px-4 snap-x snap-mandatory">
             {ABOUT_SECTIONS.map((section, index) => (
               <button
                 key={section.id}
                 onClick={() => handleSelect(index)}
-                className={`shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${
+                className={`snap-center shrink-0 flex items-center gap-3 px-6 py-3.5 rounded-xl font-semibold text-base transition-all duration-300 shadow-sm ${
                   activeIndex === index
-                    ? "bg-slate-800 text-white"
-                    : "bg-white text-slate-500 border border-slate-200 hover:text-slate-800 hover:border-slate-300"
+                    ? "bg-slate-800 text-white shadow-md scale-105"
+                    : "bg-white text-slate-500 border border-slate-200"
                 }`}
               >
-                <span className="shrink-0">{getSectionIcon(section.id, activeIndex === index ? "w-4 h-4 text-primary" : "w-4 h-4 text-slate-400")}</span>
+                <span className="shrink-0">
+                  {getSectionIcon(
+                    section.id,
+                    activeIndex === index ? "w-5 h-5 text-primary" : "w-5 h-5 text-slate-400"
+                  )}
+                </span>
                 {section.title}
               </button>
             ))}
