@@ -7,17 +7,34 @@ export default function About() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [sectionVisible, setSectionVisible] = useState(false);
   const sectionRef = useRef(null);
+  const mobileScrollRef = useRef(null);
+  const isClickScrolling = useRef(false); // To prevent observer from fighting click scroll
 
   const activeSection = ABOUT_SECTIONS[activeIndex];
 
   const handleSelect = (index) => {
     if (index === activeIndex || isAnimating) return;
     setIsAnimating(true);
-    // Brief fade-out, then switch content
+    
+    // For Desktop: simple fade transition
     setTimeout(() => {
       setActiveIndex(index);
       setIsAnimating(false);
     }, 300);
+
+    // For Mobile: scroll to the corresponding card smoothly
+    if (mobileScrollRef.current) {
+      isClickScrolling.current = true; // prevent observer from firing mid-scroll
+      const cardWidth = mobileScrollRef.current.clientWidth;
+      mobileScrollRef.current.scrollTo({
+        left: index * cardWidth,
+        behavior: "smooth"
+      });
+      // Re-enable observer after scroll finishes (~500ms)
+      setTimeout(() => {
+        isClickScrolling.current = false;
+      }, 500);
+    }
   };
 
   // Scroll reveal for the entire section
@@ -37,6 +54,37 @@ export default function About() {
     observer.observe(node);
     return () => observer.disconnect();
   }, []);
+
+  // IntersectionObserver for mobile cards (updates active tab on swipe)
+  useEffect(() => {
+    const container = mobileScrollRef.current;
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.mobile-card');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Don't update state if we are currently handling a tab click and scrolling
+        if (isClickScrolling.current) return;
+
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+            const index = Number(entry.target.dataset.index);
+            if (index !== activeIndex && !isNaN(index)) {
+              setActiveIndex(index);
+            }
+          }
+        });
+      },
+      {
+        root: container,
+        threshold: 0.6, // Fire when card is at least 60% visible
+      }
+    );
+
+    cards.forEach((card) => observer.observe(card));
+
+    return () => observer.disconnect();
+  }, [activeIndex]);
 
   const stats = [
     { number: "15+", label: "Años de experiencia", icon: "calendar" },
@@ -138,35 +186,44 @@ export default function About() {
             ))}
           </div>
 
-          {/* Active content card (mobile) */}
+          {/* Active content cards slider (mobile) */}
           <div
-            className={`mt-4 bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 ${
-              isAnimating ? "opacity-0 translate-y-4" : "opacity-100 translate-y-0"
-            }`}
+            ref={mobileScrollRef}
+            className="mt-4 flex overflow-x-auto hide-scrollbar snap-x snap-mandatory"
           >
-            <div className="p-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="p-2.5 bg-primary/10 rounded-xl">
-                  {getSectionIcon(activeSection.id, "w-8 h-8 text-primary")}
+            {ABOUT_SECTIONS.map((section, index) => (
+              <div
+                key={section.id}
+                data-index={index}
+                className="mobile-card snap-center shrink-0 w-full"
+              >
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden mx-1 mb-2">
+                  <div className="p-6 h-[280px] sm:h-[220px]">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2.5 bg-primary/10 rounded-xl">
+                        {getSectionIcon(section.id, "w-8 h-8 text-primary")}
+                      </div>
+                      <h3 className="text-2xl font-bold text-slate-800">
+                        {section.title}
+                      </h3>
+                    </div>
+                    <p className="text-slate-600 leading-relaxed text-base overflow-y-auto max-h-full pb-10">
+                      {section.body}
+                    </p>
+                  </div>
+                  <div className="h-56 w-full relative">
+                    <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
+                    <img
+                      src={section.media?.src || fondo}
+                      alt={section.title}
+                      className="w-full h-full object-cover block"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800">
-                  {activeSection.title}
-                </h3>
               </div>
-              <p className="text-slate-600 leading-relaxed text-base">
-                {activeSection.body}
-              </p>
-            </div>
-            <div className="h-56 w-full relative">
-              <div className="absolute top-0 left-0 w-full h-1/3 bg-gradient-to-b from-white to-transparent z-10 pointer-events-none" />
-              <img
-                src={activeSection.media?.src || fondo}
-                alt={activeSection.title}
-                className="w-full h-full object-cover block"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+            ))}
           </div>
         </div>
 
