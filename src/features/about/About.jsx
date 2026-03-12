@@ -8,6 +8,7 @@ export default function About() {
   const [sectionVisible, setSectionVisible] = useState(false);
   const sectionRef = useRef(null);
   const mobileScrollRef = useRef(null);
+  const mobileTabsRef = useRef(null);
   const isClickScrolling = useRef(false); // To prevent observer from fighting click scroll
 
   const activeSection = ABOUT_SECTIONS[activeIndex];
@@ -84,6 +85,18 @@ export default function About() {
     cards.forEach((card) => observer.observe(card));
 
     return () => observer.disconnect();
+  }, [activeIndex]);
+
+  // Sync mobile tab buttons scroll position
+  useEffect(() => {
+    if (mobileTabsRef.current) {
+      const tabsContainer = mobileTabsRef.current;
+      const activeButton = tabsContainer.children[activeIndex];
+      if (activeButton) {
+        // Scroll the button into view horizontally, keeping it centered
+        activeButton.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      }
+    }
   }, [activeIndex]);
 
   const stats = [
@@ -164,7 +177,7 @@ export default function About() {
         {/* MOBILE: Horizontal scrollable tabs + content below */}
         <div className="md:hidden">
           {/* Scrollable tab buttons */}
-          <div className="flex gap-3 overflow-x-auto hide-scrollbar pb-6 -mx-4 px-4 snap-x snap-mandatory">
+          <div ref={mobileTabsRef} className="flex gap-3 overflow-x-auto hide-scrollbar pb-6 -mx-4 px-4 snap-x snap-mandatory">
             {ABOUT_SECTIONS.map((section, index) => (
               <button
                 key={section.id}
@@ -197,8 +210,8 @@ export default function About() {
                 data-index={index}
                 className="mobile-card snap-center shrink-0 w-full"
               >
-                <div className="bg-white rounded-2xl shadow-lg overflow-hidden mx-1 mb-2">
-                  <div className="p-6 h-[280px] sm:h-[220px]">
+                <div className="bg-white rounded-2xl shadow-lg overflow-hidden mx-1 mb-2 h-full flex flex-col">
+                  <div className="p-6 grow flex flex-col">
                     <div className="flex items-center gap-3 mb-4">
                       <div className="p-2.5 bg-primary/10 rounded-xl">
                         {getSectionIcon(section.id, "w-8 h-8 text-primary")}
@@ -207,7 +220,7 @@ export default function About() {
                         {section.title}
                       </h3>
                     </div>
-                    <p className="text-slate-600 leading-relaxed text-base overflow-y-auto max-h-full pb-10">
+                    <p className="text-slate-600 leading-relaxed text-base pb-6">
                       {section.body}
                     </p>
                   </div>
