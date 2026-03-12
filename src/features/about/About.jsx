@@ -208,7 +208,7 @@ export default function About() {
               <div
                 key={section.id}
                 data-index={index}
-                className="mobile-card snap-center shrink-0 w-full"
+                className="mobile-card snap-center snap-always shrink-0 w-full"
               >
                 <div className="bg-white rounded-2xl shadow-lg overflow-hidden mx-1 mb-2 h-full flex flex-col">
                   <div className="p-6 grow flex flex-col">
