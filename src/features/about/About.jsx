@@ -12,6 +12,10 @@ export default function About() {
   const isClickScrolling = useRef(false); // To prevent observer from fighting click scroll
 
   const activeSection = ABOUT_SECTIONS[activeIndex];
+  const desktopImageClass =
+    activeSection.id === "equipo"
+      ? "w-full h-full object-cover object-top block"
+      : "w-full h-full object-cover block";
 
   const handleSelect = (index) => {
     if (index === activeIndex || isAnimating) return;
@@ -93,8 +97,16 @@ export default function About() {
       const tabsContainer = mobileTabsRef.current;
       const activeButton = tabsContainer.children[activeIndex];
       if (activeButton) {
-        // Scroll the button into view horizontally, keeping it centered
-        activeButton.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        const containerWidth = tabsContainer.clientWidth;
+        const buttonLeft = activeButton.offsetLeft;
+        const buttonWidth = activeButton.clientWidth;
+        const targetLeft =
+          buttonLeft - containerWidth / 2 + buttonWidth / 2;
+
+        tabsContainer.scrollTo({
+          left: Math.max(0, targetLeft),
+          behavior: "smooth",
+        });
       }
     }
   }, [activeIndex]);
@@ -167,7 +179,7 @@ export default function About() {
       {/* --- INTERACTIVE TABBED SECTION --- */}
       <div
         ref={sectionRef}
-        className="pt-10 md:pt-32 pb-20 px-6 max-w-7xl mx-auto relative z-20"
+        className="pt-10 md:pt-32 pb-20 px-6 md:px-2 max-w-7xl mx-auto relative z-20"
         style={{
           opacity: sectionVisible ? 1 : 0,
           transform: sectionVisible ? "translateY(0)" : "translateY(40px)",
@@ -241,9 +253,9 @@ export default function About() {
         </div>
 
         {/* DESKTOP: Side tabs + main display card */}
-        <div className="hidden md:flex gap-8">
+        <div className="hidden md:flex gap-3 xl:gap-4">
           {/* Left sidebar with title buttons */}
-          <div className="w-72 shrink-0 flex flex-col gap-2 bg-white rounded-2xl shadow-xl p-4">
+          <div className="w-56 xl:w-60 shrink-0 flex flex-col gap-2 bg-white rounded-2xl shadow-xl p-4">
             <h3 className="text-lg font-bold text-slate-400 uppercase tracking-widest mb-4 px-4">
               Conócenos
             </h3>
@@ -251,7 +263,7 @@ export default function About() {
               <button
                 key={section.id}
                 onClick={() => handleSelect(index)}
-                className={`group flex items-center gap-4 px-5 py-4 rounded-lg text-left transition-all duration-200 border-l-4 ${
+                className={`group flex items-center gap-3 px-4 py-4 rounded-lg text-left transition-all duration-200 border-l-4 ${
                   activeIndex === index
                     ? "border-l-primary bg-slate-50 text-slate-900"
                     : "border-l-transparent bg-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800"
@@ -262,7 +274,7 @@ export default function About() {
                 }`}>
                   {getSectionIcon(section.id, activeIndex === index ? "w-6 h-6 text-primary" : "w-6 h-6 text-slate-400")}
                 </div>
-                <span className={`font-medium text-base transition-colors ${
+                <span className={`font-medium text-[15px] xl:text-base transition-colors ${
                   activeIndex === index ? "font-semibold" : ""
                 }`}>
                   {section.title}
@@ -277,9 +289,9 @@ export default function About() {
               isAnimating ? "opacity-0 scale-[0.98]" : "opacity-100 scale-100"
             }`}
           >
-            <div className="flex flex-col lg:flex-row h-full">
+            <div className="flex flex-col lg:flex-row h-full min-h-[440px] xl:min-h-[520px]">
               {/* Text content */}
-              <div className="lg:w-1/2 p-10 lg:pl-14 lg:pr-12 flex flex-col justify-center">
+              <div className="lg:w-[40%] xl:w-[38%] p-10 lg:pl-12 lg:pr-10 flex flex-col justify-center">
                 <div className="flex items-center gap-4 mb-6">
                   <div className="p-3 bg-primary/10 rounded-2xl">
                     {getSectionIcon(activeSection.id, "w-10 h-10 text-primary")}
@@ -294,12 +306,11 @@ export default function About() {
               </div>
 
               {/* Image */}
-              <div className="lg:w-1/2 relative min-h-[400px]">
-                <div className="hidden lg:block absolute top-0 left-0 h-full w-1/3 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+              <div className="lg:w-[60%] xl:w-[62%] relative min-h-[400px] xl:min-h-[520px]">
                 <img
                   src={activeSection.media?.src || fondo}
                   alt={activeSection.title}
-                  className="w-full h-full object-cover block"
+                  className={desktopImageClass}
                   loading="lazy"
                   decoding="async"
                 />
